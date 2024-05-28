@@ -74,6 +74,10 @@
    git config --global user.name "Your Name"
    git config --global user.email "your@email.com"
    ```
+   Set Personal access token (PAT)
+
+   On GitHub, goto "Settings" > Developer settings > Personal access tokens > Tokens (classic) > Generate new token (classic)
+   Copy & save the newly generated token in a notepad
 
 3. Connect your local repository to GitHub (replace `<username>` and `<token>` with your GitHub username and personal access token):
 
