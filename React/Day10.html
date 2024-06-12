@@ -253,3 +253,243 @@ Open [http://localhost:3000](http://localhost:3000) in your browser. You should 
 This simple example demonstrates how `useParams` can be used to extract and use URL parameters in a React application.
 
 ############################
+
+Let's break down the `MovieDetails` component step-by-step to understand how `useParams`, `useEffect`, and state management work together to fetch and display movie details.
+
+### `MovieDetails` Component Explanation
+
+1. **Imports:**
+   ```jsx
+   import React, { useState, useEffect } from 'react';
+   import { useParams } from 'react-router-dom';
+   import { fetchMovieDetails } from './api';
+   import { Typography, Card, CardMedia, CardContent } from '@mui/material';
+   ```
+   - **React**: The main library for building the component.
+   - **useState**: Hook for managing the state within the component.
+   - **useEffect**: Hook for performing side effects in the component (e.g., fetching data).
+   - **useParams**: Hook from React Router to get the dynamic parameters from the URL.
+   - **Material-UI Components**: Components for styling (`Typography`, `Card`, `CardMedia`, `CardContent`).
+
+2. **Component Definition:**
+   ```jsx
+   const MovieDetails = () => {
+     const { id } = useParams(); // Extracts the `id` parameter from the URL
+     const [movie, setMovie] = useState(null); // State to store movie details
+
+     useEffect(() => {
+       const getMovieDetails = async () => {
+         const movieData = await fetchMovieDetails(id); // Fetch movie details using the id
+         setMovie(movieData); // Update state with the fetched movie details
+       };
+       getMovieDetails();
+     }, [id]); // useEffect dependency array, re-runs the effect if `id` changes
+
+     if (!movie) {
+       return <div>Loading...</div>; // Render a loading message while movie data is being fetched
+     }
+
+     return (
+       <Card>
+         <CardMedia
+           component="img"
+           image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} // Movie poster image
+           alt={movie.title}
+         />
+         <CardContent>
+           <Typography variant="h4">{movie.title}</Typography> // Movie title
+           <Typography variant="body1">{movie.overview}</Typography> // Movie overview
+           <Typography variant="body2">Release Date: {movie.release_date}</Typography> // Release date
+         </CardContent>
+       </Card>
+     );
+   };
+
+   export default MovieDetails;
+   ```
+
+### How `useParams`, `useEffect`, and State Work Together
+
+1. **useParams:**
+   - `const { id } = useParams();`
+   - This hook extracts the `id` parameter from the URL. For example, if the URL is `/movie/653346`, `useParams` returns `{ id: '653346' }`.
+
+2. **useState:**
+   - `const [movie, setMovie] = useState(null);`
+   - This hook creates a state variable `movie` initialized to `null`. `setMovie` is the function to update this state.
+
+3. **useEffect:**
+   - `useEffect(() => { ... }, [id]);`
+   - This hook runs the function inside it after the component mounts and whenever the `id` changes.
+   - Inside the effect, it calls `getMovieDetails`, an asynchronous function that fetches movie details from the API using `fetchMovieDetails(id)`.
+   - Once the data is fetched, it updates the `movie` state with `setMovie(movieData)`.
+
+### Example Flow
+
+1. **User Clicks on a Movie Link:**
+   - User clicks on a movie link in the `MovieList` component, navigating to `/movie/653346`.
+
+2. **URL Matching and Parameter Extraction:**
+   - React Router matches this URL to the route path `/movie/:id`, and `useParams` extracts `id = 653346`.
+
+3. **Component Mount and useEffect Execution:**
+   - `MovieDetails` component mounts, and `useEffect` runs because `id` is in its dependency array.
+   - `getMovieDetails` is called with `id = 653346`.
+
+4. **Fetching Movie Data:**
+   - `fetchMovieDetails(653346)` fetches details for the movie with ID `653346` from the API.
+   - Example fetched data:
+     ```json
+     {
+       "id": 653346,
+       "title": "Kingdom of the Planet of the Apes",
+       "poster_path": "/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
+       "overview": "Several generations in the future...",
+       "release_date": "2024-05-08",
+       "vote_average": 6.877,
+       "vote_count": 941
+     }
+     ```
+
+5. **Updating State and Rendering:**
+   - `setMovie(movieData)` updates the `movie` state with the fetched data.
+   - Since `movie` is now not `null`, the component renders the movie details:
+     - Poster image
+     - Title
+     - Overview
+     - Release date
+
+### Rendering
+
+When the movie data is fetched and stored in the state, the component re-renders to display the movie details:
+
+```jsx
+<Card>
+  <CardMedia
+    component="img"
+    image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+    alt={movie.title}
+  />
+  <CardContent>
+    <Typography variant="h4">{movie.title}</Typography>
+    <Typography variant="body1">{movie.overview}</Typography>
+    <Typography variant="body2">Release Date: {movie.release_date}</Typography>
+  </CardContent>
+</Card>
+```
+
+- **CardMedia**: Displays the movie's poster.
+- **CardContent**: Contains the movie's title, overview, and release date.
+
+By clicking on a movie link, the `MovieDetails` component uses `useParams` to get the movie ID from the URL, fetches the corresponding movie details using `useEffect`, and renders those details.
+##############################
+### Flow Chart Explanation for `MovieDetails` Component
+
+#### Step-by-Step Flow:
+
+1. **User Interaction:**
+   - User clicks on a movie link in the `MovieList` component.
+   - URL changes to `/movie/653346`.
+
+2. **Route Matching:**
+   - React Router matches the URL to the path `/movie/:id`.
+   - `MovieDetails` component is rendered.
+
+3. **Component Initialization:**
+   - `useParams` extracts the `id` from the URL.
+   - `const { id } = useParams();` ➔ `id = 653346`
+
+4. **State Initialization:**
+   - `useState` initializes `movie` state to `null`.
+   - `const [movie, setMovie] = useState(null);`
+
+5. **Fetching Data with useEffect:**
+   - `useEffect` runs on component mount and when `id` changes.
+   - Calls `getMovieDetails` function to fetch movie details.
+
+6. **Fetching Movie Details:**
+   - `fetchMovieDetails(id)` fetches data from the API.
+   - Example response:
+     ```json
+     {
+       "id": 653346,
+       "title": "Kingdom of the Planet of the Apes",
+       "poster_path": "/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
+       "overview": "Several generations in the future...",
+       "release_date": "2024-05-08",
+       "vote_average": 6.877,
+       "vote_count": 941
+     }
+     ```
+
+7. **Updating State:**
+   - `setMovie(movieData)` updates `movie` state with fetched data.
+
+8. **Rendering Movie Details:**
+   - If `movie` is not `null`, the component renders movie details.
+   - Displays:
+     - Poster image
+     - Title
+     - Overview
+     - Release date
+
+#### Flow Chart:
+
+```plaintext
+User clicks on a movie link
+        ↓
+URL changes to /movie/653346
+        ↓
+React Router matches the route /movie/:id
+        ↓
+MovieDetails component is rendered
+        ↓
+useParams extracts id from URL
+        ↓
+useState initializes movie state to null
+        ↓
+useEffect runs (dependency: [id])
+        ↓
+Calls getMovieDetails function
+        ↓
+fetchMovieDetails(id) fetches movie data from API
+        ↓
+API returns movie data
+        ↓
+setMovie(movieData) updates movie state with fetched data
+        ↓
+Re-render MovieDetails component
+        ↓
+If movie is not null, render movie details
+        ↓
+Display poster image, title, overview, release date
+```
+
+### Detailed Flow Description:
+
+1. **User Interaction and URL Change:**
+   - The user clicks a movie link, changing the URL to `/movie/653346`.
+
+2. **Route Matching:**
+   - React Router identifies the URL matches the path `/movie/:id` and renders the `MovieDetails` component.
+
+3. **Component Initialization:**
+   - Inside `MovieDetails`, `useParams` extracts the `id` parameter (`653346`) from the URL.
+
+4. **State Initialization:**
+   - `useState` initializes the `movie` state variable to `null`.
+
+5. **Fetching Data with useEffect:**
+   - `useEffect` is triggered due to component mount and dependency on `id`.
+   - `getMovieDetails` function is called to fetch movie details.
+
+6. **Fetching Movie Details:**
+   - `fetchMovieDetails(653346)` sends a request to the API and fetches movie details.
+
+7. **Updating State:**
+   - `setMovie(movieData)` updates the `movie` state with the fetched movie details.
+
+8. **Rendering Movie Details:**
+   - The component re-renders with the updated `movie` state.
+   - If `movie` is not `null`, it renders the movie details, displaying the poster image, title, overview, and release date.
+##############################
