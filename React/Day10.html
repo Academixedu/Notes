@@ -110,4 +110,146 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000) in your browser. You should see the Home page with links to navigate to the About page.
 
-#########################################################################
+#############################################
+
+### Simple Tutorial on `useParams`
+
+#### Goal:
+We will create a small React app that demonstrates how to use `useParams` to extract URL parameters and display specific content based on those parameters.
+
+#### Step 1: Create a New React App
+
+First, make sure you have Node.js and npm installed. Then, create a new React app by running:
+
+```bash
+npx create-react-app my-app
+cd my-app
+```
+
+#### Step 2: Install React Router
+
+Next, install React Router by running:
+
+```bash
+npm install react-router-dom
+```
+
+#### Step 3: Create Components
+
+Create two simple components: `Home.js` and `Profile.js`.
+
+**`src/Home.js`:**
+
+```jsx
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const Home = () => {
+  return (
+    <div>
+      <h1>Home Page</h1>
+      <p>Welcome to the Home page!</p>
+      <ul>
+        <li><Link to="/profile/john">John's Profile</Link></li>
+        <li><Link to="/profile/jane">Jane's Profile</Link></li>
+      </ul>
+    </div>
+  );
+};
+
+export default Home;
+```
+
+**`src/Profile.js`:**
+
+```jsx
+import React from 'react';
+import { useParams } from 'react-router-dom';
+
+const Profile = () => {
+  const { username } = useParams();
+
+  return (
+    <div>
+      <h1>Profile Page</h1>
+      <p>Welcome to {username}'s profile!</p>
+    </div>
+  );
+};
+
+export default Profile;
+```
+
+#### Step 4: Set Up Routing in `App.js`
+
+Update `App.js` to include routing.
+
+**`src/App.js`:**
+
+```jsx
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './Home';
+import Profile from './Profile';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/profile/:username" element={<Profile />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+```
+
+### Explanation
+
+1. **Home Component (`Home.js`):**
+   - This component displays the home page.
+   - It includes links to two different profiles (`John` and `Jane`).
+
+2. **Profile Component (`Profile.js`):**
+   - This component uses `useParams` to extract the `username` parameter from the URL.
+   - The URL parameter is displayed on the profile page.
+
+3. **Routing Setup (`App.js`):**
+   - The `Router` component wraps the entire application.
+   - The `Routes` component contains all the route definitions.
+   - The `Route` component with `path="/"` renders the `Home` component.
+   - The `Route` component with `path="/profile/:username"` renders the `Profile` component. The `:username` part is a URL parameter.
+
+### How `useParams` Works
+
+1. **User Clicks on a Profile Link:**
+   - When the user clicks on the link `<Link to="/profile/john">John's Profile</Link>`, the URL changes to `/profile/john`.
+
+2. **Route Matching:**
+   - React Router matches this URL to the route path `/profile/:username`.
+
+3. **Component Rendering:**
+   - The `Profile` component is rendered because the URL matches `/profile/:username`.
+
+4. **Extracting URL Parameter:**
+   - Inside the `Profile` component, `useParams` extracts the `username` parameter from the URL.
+   - `const { username } = useParams();` returns `{ username: 'john' }` when the URL is `/profile/john`.
+
+5. **Displaying the Parameter:**
+   - The `Profile` component displays the extracted `username` parameter.
+
+### Running the App
+
+Start your app by running:
+
+```bash
+npm start
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser. You should see the home page with links to `John` and `Jane`'s profiles. Clicking on a profile link will navigate to the profile page and display the corresponding username.
+
+This simple example demonstrates how `useParams` can be used to extract and use URL parameters in a React application.
+
+############################
