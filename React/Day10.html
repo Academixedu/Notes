@@ -607,4 +607,37 @@ console.log(myArray);  // [0, 2, 3, 4, 5, 6]
 - **Value Types**: Using `const` with value types (e.g., numbers, strings) means the variable cannot be reassigned to a new value.
 - **Reference Types**: Using `const` with reference types (e.g., objects, arrays) means the reference cannot be changed, but the properties or elements of the referenced data can be modified.
 
+#### Prompt Engineering Practice
+
+Certainly! Here is the formatted text:
+
+---
+
+Generate a JavaScript module using Axios to fetch movie data from TheMovieDatabase (TMDB) API. The module should include:
+
+1. An import statement for Axios.
+2. Constants for the API key and the base URL of TMDB.
+3. An asynchronous function `fetchMovies` that fetches a list of popular movies.
+4. An asynchronous function `fetchMovieDetails` that fetches details for a specific movie based on its ID.
+
+The API key is `'49a5508b99e54cbf67438655e1565e32'` and the base URL is `'https://api.themoviedb.org/3'`. Both functions should use Axios to make GET requests to the appropriate endpoints and return the data from the responses.
+
+---
+
+The code you provided is a valid implementation of the prompt. It imports Axios and defines constants for the API key and the base URL of TMDB. It then exports two asynchronous functions: `fetchMovies` and `fetchMovieDetails`.
+
+The `fetchMovies` function fetches a list of popular movies by making a GET request to the `/movie/popular` endpoint of TMDB with the API key as a query parameter. The function returns the list of movies from the response data.
+
+The `fetchMovieDetails` function fetches details for a specific movie based on its ID by making a GET request to the `/movie/{movieId}` endpoint of TMDB with the API key as a query parameter. The function returns the movie details from the response data.
+
+Both functions use Axios to make GET requests to the appropriate endpoints and return the data from the responses.
+
+
+###### MovieList.js
+"Create a React component called MovieList that displays a list of movies fetched from the TMDB API. 
+The component should use the fetchMovies function from the Api module to fetch the movie data. 
+The component should use the useState and useEffect hooks to manage the state of the movies data. 
+The component should render a grid of movie cards using the Grid component from Material-UI. 
+Each movie card should display the movie title, a rating based on the vote average, and an image of the movie poster. 
+The movie cards should be clickable and navigate to a details page for the selected movie."
 
