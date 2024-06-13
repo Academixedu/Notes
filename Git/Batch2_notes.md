@@ -159,8 +159,8 @@ This tutorial will guide you through the process of using `git revert` to undo c
    The history should now include the revert commit:
 
    ```bash
-   c439b6b (HEAD -> main) Revert "Made changes in testrevert1 and testrevert2"
-   d6562e2 Made changes in testrevert1 and testrevert2
+   c439b6b (HEAD -> main) Revert "Made changes in revert1"
+   d6562e2 Made changes in revert1
    0b34283 adding empty files
    ```
 
