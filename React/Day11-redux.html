@@ -1,277 +1,331 @@
-integrating Redux for state management and ensuring proper routing without nesting `Router` components.
 
-### Step 1: Set Up the Project
+### Step-by-Step Tutorial
 
-1. **Create a new React project using Create React App:**
+#### Step 1: Create a New React Project
+```bash
+npx create-react-app movie-app
+cd movie-app
+```
 
-   ```bash
-   npx create-react-app movie-app
-   cd movie-app
-   ```
+#### Step 2: Install Required Dependencies
+```bash
+npm install @mui/material @emotion/react @emotion/styled react-router-dom axios @reduxjs/toolkit react-redux
+```
 
-2. **Install required dependencies:**
-
-   ```bash
-   npm install @mui/material @emotion/react @emotion/styled react-router-dom axios @reduxjs/toolkit react-redux
-   ```
-
-### Step 2: Get TMDB API Key
-
+### Step 3: Get TMDB API Key
 1. **Sign up for an API key from [The Movie Database (TMDB)](https://www.themoviedb.org/documentation/api)**.
 
-### Step 3: Create API Service
-
+### Step 4: Create API Service
 1. **Create a new file named `api.js` in the `src` folder:**
+```javascript
+import axios from 'axios';
 
-   ```javascript
-   import axios from 'axios';
+const API_KEY = 'YOUR_TMDB_API_KEY';
+const BASE_URL = 'https://api.themoviedb.org/3';
 
-   const API_KEY = 'YOUR_TMDB_API_KEY';
-   const BASE_URL = 'https://api.themoviedb.org/3';
+export const fetchMovies = async (genreId = null) => {
+  const genreQuery = genreId ? `&with_genres=${genreId}` : '';
+  console.log(`Fetching movies with genre: ${genreId}`); // Debugging message
+  const response = await axios.get(
+    `${BASE_URL}/discover/movie?api_key=${API_KEY}${genreQuery}`
+  );
+  console.log("API Response:", response.data.results); // Debugging message
+  return response.data.results;
+};
 
-   export const fetchMovies = async () => {
-     const response = await axios.get(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
-     return response.data.results;
-   };
+export const fetchMovieDetails = async (id) => {
+  const response = await axios.get(
+    `${BASE_URL}/movie/${id}?api_key=${API_KEY}`
+  );
+  return response.data;
+};
+```
 
-   export const fetchMovieDetails = async (id) => {
-     const response = await axios.get(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
-     return response.data;
-   };
-   ```
-
-### Step 4: Create Redux Slices
-
+### Step 5: Create Redux Slice
 1. **Create a new file named `movieSlice.js` in the `src` folder:**
+```javascript
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { fetchMovies, fetchMovieDetails } from './api';
 
-   ```javascript
-   import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-   import { fetchMovies, fetchMovieDetails } from './api';
+export const getMovies = createAsyncThunk(
+  'movies/getMovies',
+  async (genreId) => {
+    const response = await fetchMovies(genreId);
+    console.log("Fetched movies for genre:", genreId, response); // Debugging message
+    return response;
+  }
+);
 
-   export const getMovies = createAsyncThunk('movies/getMovies', async () => {
-     const response = await fetchMovies();
-     return response;
-   });
+export const getMovieDetails = createAsyncThunk(
+  'movies/getMovieDetails',
+  async (id) => {
+    const response = await fetchMovieDetails(id);
+    return response;
+  }
+);
 
-   export const getMovieDetails = createAsyncThunk('movies/getMovieDetails', async (id) => {
-     const response = await fetchMovieDetails(id);
-     return response;
-   });
+const movieSlice = createSlice({
+  name: 'movies',
+  initialState: {
+    movies: [],
+    movieDetails: null,
+    status: null,
+    selectedGenre: null,
+  },
+  reducers: {
+    setGenre: (state, action) => {
+      console.log("Genre set to:", action.payload); // Debugging message
+      state.selectedGenre = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getMovies.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getMovies.fulfilled, (state, action) => {
+        console.log("Movies fetched successfully:", action.payload); // Debugging message
+        state.movies = action.payload;
+        state.status = 'succeeded';
+      })
+      .addCase(getMovies.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(getMovieDetails.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getMovieDetails.fulfilled, (state, action) => {
+        state.movieDetails = action.payload;
+        state.status = 'succeeded';
+      })
+      .addCase(getMovieDetails.rejected, (state) => {
+        state.status = 'failed';
+      });
+  },
+});
 
-   const movieSlice = createSlice({
-     name: 'movies',
-     initialState: {
-       movies: [],
-       movieDetails: null,
-       status: null,
-     },
-     reducers: {},
-     extraReducers: (builder) => {
-       builder
-         .addCase(getMovies.pending, (state) => {
-           state.status = 'loading';
-         })
-         .addCase(getMovies.fulfilled, (state, action) => {
-           state.movies = action.payload;
-           state.status = 'succeeded';
-         })
-         .addCase(getMovies.rejected, (state) => {
-           state.status = 'failed';
-         })
-         .addCase(getMovieDetails.pending, (state) => {
-           state.status = 'loading';
-         })
-         .addCase(getMovieDetails.fulfilled, (state, action) => {
-           state.movieDetails = action.payload;
-           state.status = 'succeeded';
-         })
-         .addCase(getMovieDetails.rejected, (state) => {
-           state.status = 'failed';
-         });
-     },
-   });
+export const { setGenre } = movieSlice.actions;
 
-   export default movieSlice.reducer;
-   ```
+export default movieSlice.reducer;
+```
 
-### Step 5: Configure the Store
-
+### Step 6: Create Redux Store
 1. **Create a new file named `store.js` in the `src` folder:**
+```javascript
+import { configureStore } from '@reduxjs/toolkit';
+import movieReducer from './movieSlice';
 
-   ```javascript
-   import { configureStore } from '@reduxjs/toolkit';
-   import movieReducer from './movieSlice';
+export const store = configureStore({
+  reducer: {
+    movies: movieReducer,
+  },
+});
+```
 
-   export const store = configureStore({
-     reducer: {
-       movies: movieReducer,
-     },
-   });
-   ```
-
-### Step 6: Provide the Store
-
-1. **Wrap your application with the `Provider` component in `index.js`:**
-
-   ```javascript
-   import React from 'react';
-   import ReactDOM from 'react-dom';
-   import { BrowserRouter } from 'react-router-dom';
-   import { Provider } from 'react-redux';
-   import { store } from './store';
-   import App from './App';
-
-   ReactDOM.render(
-     <Provider store={store}>
-       <BrowserRouter>
-         <App />
-       </BrowserRouter>
-     </Provider>,
-     document.getElementById('root')
-   );
-   ```
-
-### Step 7: Create Movie List Component
-
-1. **Create a new file named `MovieList.js` in the `src` folder:**
-
-   ```jsx
-   import React, { useEffect } from 'react';
-   import { useDispatch, useSelector } from 'react-redux';
-   import { getMovies } from './movieSlice';
-   import { Grid, Card, CardMedia, CardContent, Typography, Rating } from '@mui/material';
-   import { Link } from 'react-router-dom';
-
-   const MovieList = () => {
-     const dispatch = useDispatch();
-     const { movies, status } = useSelector((state) => state.movies);
-
-     useEffect(() => {
-       dispatch(getMovies());
-     }, [dispatch]);
-
-     if (status === 'loading') return <div>Loading...</div>;
-     if (status === 'failed') return <div>Error loading data</div>;
-
-     return (
-       <Grid container spacing={3}>
-         {movies.map((movie) => (
-           <Grid item xs={6} sm={4} md={3} key={movie.id}>
-             <Link to={`/movie/${movie.id}`} style={{ textDecoration: 'none' }}>
-               <Card>
-                 <CardMedia
-                   component="img"
-                   image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                   alt={movie.title}
-                 />
-                 <CardContent>
-                   <Typography variant="h6">{movie.title}</Typography>
-                   <Rating value={movie.vote_average / 2} precision={0.5} readOnly />
-                 </CardContent>
-               </Card>
-             </Link>
-           </Grid>
-         ))}
-       </Grid>
-     );
-   };
-
-   export default MovieList;
-   ```
-
-### Step 8: Create Movie Details Component
-
-1. **Create a new file named `MovieDetails.js` in the `src` folder:**
-
-   ```jsx
-   import React, { useEffect } from 'react';
-   import { useParams } from 'react-router-dom';
-   import { useDispatch, useSelector } from 'react-redux';
-   import { getMovieDetails } from './movieSlice';
-   import { Typography, Card, CardMedia, CardContent } from '@mui/material';
-
-   const MovieDetails = () => {
-     const { id } = useParams();
-     const dispatch = useDispatch();
-     const { movieDetails, status } = useSelector((state) => state.movies);
-
-     useEffect(() => {
-       dispatch(getMovieDetails(id));
-     }, [dispatch, id]);
-
-     if (status === 'loading') return <div>Loading...</div>;
-     if (status === 'failed') return <div>Error loading data</div>;
-
-     return (
-       movieDetails && (
-         <Card>
-           <CardMedia
-             component="img"
-             image={`https://image.tmdb.org/t/p/w500/${movieDetails.poster_path}`}
-             alt={movieDetails.title}
-           />
-           <CardContent>
-             <Typography variant="h4">{movieDetails.title}</Typography>
-             <Typography variant="body1">{movieDetails.overview}</Typography>
-             <Typography variant="body2">Release Date: {movieDetails.release_date}</Typography>
-           </CardContent>
-         </Card>
-       )
-     );
-   };
-
-   export default MovieDetails;
-   ```
-
-### Step 9: Set Up React Router
-
+### Step 7: Set Up React Router
 1. **Update `App.js` to include routing:**
+```javascript
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { Grid } from '@mui/material';
+import MovieList from './MovieList';
+import MovieDetails from './MovieDetails';
+import Sidebar from './Sidebar';
 
-   ```jsx
-   import React from 'react';
-   import { Route, Routes } from 'react-router-dom';
-   import MovieList from './MovieList';
-   import MovieDetails from './MovieDetails';
+function App() {
+  return (
+    <Grid container>
+      <Grid item xs={12} sm={3}>
+        <Sidebar />
+      </Grid>
+      <Grid item xs={12} sm={9}>
+        <Routes>
+          <Route path="/" element={<MovieList />} />
+          <Route path="/movie/:id" element={<MovieDetails />} />
+        </Routes>
+      </Grid>
+    </Grid>
+  );
+}
 
-   function App() {
-     return (
-       <div>
-         <Routes>
-           <Route path="/" element={<MovieList />} />
-           <Route path="/movie/:id" element={<MovieDetails />} />
-         </Routes>
-       </div>
-     );
-   }
+export default App;
+```
 
-   export default App;
-   ```
+### Step 8: Create Sidebar Component
+1. **Create a new file named `Sidebar.js` in the `src` folder:**
+```javascript
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { setGenre, getMovies } from './movieSlice';
+import { Button, List, ListItem } from '@mui/material';
 
-### Step 10: Run the App
+const Sidebar = () => {
+  const dispatch = useDispatch();
 
+  const handleGenreClick = (genreId) => {
+    console.log("Genre clicked:", genreId); // Debugging message
+    dispatch(setGenre(genreId));
+    dispatch(getMovies(genreId));
+  };
+
+  return (
+    <div>
+      <List>
+        <ListItem>
+          <Button variant="contained" onClick={() => handleGenreClick(28)}>
+            Action
+          </Button>
+        </ListItem>
+        <ListItem>
+          <Button variant="contained" onClick={() => handleGenreClick(35)}>
+            Comedy
+          </Button>
+        </ListItem>
+        {/* Add more genres as needed */}
+      </List>
+    </div>
+  );
+};
+
+export default Sidebar;
+```
+
+### Step 9: Create Movie List Component
+1. **Create a new file named `MovieList.js` in the `src` folder:**
+```javascript
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMovies } from './movieSlice';
+import { Grid, Card, CardMedia, CardContent, Typography, Rating } from '@mui/material';
+import { Link } from 'react-router-dom';
+
+const MovieList = () => {
+  const dispatch = useDispatch();
+  const { movies, status, selectedGenre } = useSelector((state) => state.movies);
+
+  useEffect(() => {
+    console.log("Selected Genre in MovieList:", selectedGenre); // Debugging message
+    dispatch(getMovies(selectedGenre));
+  }, [dispatch, selectedGenre]);
+
+  useEffect(() => {
+    console.log("Movies in state:", movies); // Debugging message
+  }, [movies]);
+
+  if (status === 'loading') return <div>Loading...</div>;
+  if (status === 'failed') return <div>Error loading data</div>;
+
+  return (
+    <Grid container spacing={3}>
+      {movies.map((movie) => (
+        <Grid item xs={6} sm={4} md={3} key={movie.id}>
+          <Link to={`/movie/${movie.id}`} style={{ textDecoration: 'none' }}>
+            <Card>
+              <CardMedia
+                component="img"
+                image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                alt={movie.title}
+              />
+              <CardContent>
+                <Typography variant="h6">{movie.title}</Typography>
+                <Rating value={movie.vote_average / 2} precision={0.5} readOnly />
+              </CardContent>
+            </Card>
+          </Link>
+        </Grid>
+      ))}
+    </Grid>
+  );
+};
+
+export default MovieList;
+```
+
+### Step 10: Create Movie Details Component
+1. **Create a new file named `MovieDetails.js` in the `src` folder:**
+```javascript
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { fetchMovieDetails } from './api';
+import { Typography, Card, CardMedia, CardContent } from '@mui/material';
+
+const MovieDetails = () => {
+  const { id } = useParams();
+  const [movie, setMovie] = useState(null);
+
+  useEffect(() => {
+    const getMovieDetails = async () => {
+      const movieData = await fetchMovieDetails(id);
+      setMovie(movieData);
+    };
+    getMovieDetails();
+  }, [id]);
+
+  if (!movie) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <Card>
+      <CardMedia
+        component="img"
+        image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+        alt={movie.title}
+      />
+      <CardContent>
+        <Typography variant="h4">{movie.title}</Typography>
+        <Typography variant="body1">{movie.overview}</Typography>
+        <Typography variant="body2">Release Date: {movie.release_date}</Typography>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default MovieDetails;
+```
+
+### Step 11: Integrate Redux with React
+1. **Update `index.js` to integrate Redux with React:**
+```javascript
+import React from 'react';
+import ReactDOM from '
+
+react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>
+  </React.StrictMode>
+);
+```
+
+### Step 12: Run the App
 1. **Start the React app:**
-
-   ```bash
-   npm start
-   ```
-
-### Summary
-
-This setup ensures that Redux is used to manage the state for fetching and displaying movie data, making the application scalable and maintainable. The project structure uses `createAsyncThunk` for handling asynchronous actions, `createSlice` for creating slices of state, and `useSelector` and `useDispatch` hooks for connecting Redux state and actions to React components. This approach ensures a clean and maintainable structure for your React application.
-
-**File structure:**
+```bash
+npm start
 ```
-movie-app
-├── public
-│   └── index.html
-├── src
-│   ├── api.js
-│   ├── App.js
-│   ├── index.js
-│   ├── movieSlice.js
-│   ├── MovieList.js
-│   ├── MovieDetails.js
-│   └── store.js
-├── package.json
-└── README.md
-```
+
+### Summary and Console Messages
+- Ensure the API key is correctly replaced in `api.js`.
+- Monitor the console for debugging messages:
+  - `Fetching movies with genre: <genreId>`
+  - `API Response: <response>`
+  - `Genre clicked: <genreId>`
+  - `Genre set to: <genreId>`
+  - `Fetched movies for genre: <genreId> <response>`
+  - `Movies fetched successfully: <response>`
+  - `Selected Genre in MovieList: <genreId>`
+  - `Movies in state: <movies>`
+
+These console messages help to trace the flow of data from the API call to the Redux state and finally to the component rendering.
+
+With this tutorial, you should have a fully functional movie listing application with genre filtering using React, Redux, and TMDB API.
