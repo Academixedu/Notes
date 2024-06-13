@@ -26,12 +26,100 @@ git commit -m "Add a plot twist"
 Merge your plot twist into the main story:
 
 git switch main
+######Merge #######
 git merge plot-twist
+git log --oneline
 ################################################################
-Chapter 3: Git commit and revert
-Add a file 2.txt
-git add .
-git commit -m "Added 2nd file"
-########################################################
+## Git Revert Tutorial
+
+### Introduction
+This tutorial will guide you through the process of using `git revert` to undo changes made by specific commits. We'll walk through a real-life example where we add and modify files, then revert those changes.
+
+### Example Scenario
+
+1. **Add and Commit Files**
+
+First, let's add and commit two new files:
+
+```bash
+$ git add .
+$ git commit -m "adding empty files"
+```
+
+This creates a commit with the message "adding empty files" and adds two new files, `testrevert1.txt` and `testrevert2.txt`.
+
+2. **Modify and Commit Changes**
+
+Next, we make changes to `testrevert1.txt` and `testrevert2.txt` and commit those changes:
+
+```bash
+$ git add .
+$ git commit -m "Made changes in testrevert1 and revert2"
+```
+
+This creates a new commit with the message "Made changes in testrevert1 and revert2".
+
+3. **View Commit History**
+
+To see the commit history, use:
+
+```bash
+$ git log --oneline
+```
+
+You should see something like this:
+
+```bash
+d6562e2 (HEAD -> main) Made changes in testrevert1 and revert2
+0b34283 adding empty files
+95b1195 Revert "revert"
+d291836 revert
+0fd618c changed file
+be7437f Revert "this should be reverted"
+29c8d64 this should be reverted
+b73e8f3 Merge branch 'action'
+4751584 (action) asdf
+```
+
+4. **Revert the Last Commit**
+
+To revert the commit `d6562e2`, use:
+
+```bash
+$ git revert d6562e2
+```
+
+This command creates a new commit that undoes the changes introduced by `d6562e2`. The output should be similar to:
+
+```bash
+[main c439b6b] Revert "Made changes in testrevert1 and revert2"
+ 2 files changed, 2 deletions(-)
+```
+
+5. **Verify the Revert**
+
+Check the commit history again:
+
+```bash
+$ git log --oneline
+```
+
+The history should now include the revert commit:
+
+```bash
+c439b6b (HEAD -> main) Revert "Made changes in testrevert1 and revert2"
+d6562e2 Made changes in testrevert1 and revert2
+0b34283 adding empty files
+95b1195 Revert "revert"
+d291836 revert
+0fd618c changed file
+be7437f Revert "this should be reverted"
+29c8d64 this should be reverted
+b73e8f3 Merge branch 'action'
+4751584 (action) asdf
+```
+
+
+#######################################
 
 
