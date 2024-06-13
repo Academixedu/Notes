@@ -1,4 +1,4 @@
-To integrate Redux into the given project structure, follow these steps:
+integrating Redux for state management and ensuring proper routing without nesting `Router` components.
 
 ### Step 1: Set Up the Project
 
@@ -65,27 +65,29 @@ To integrate Redux into the given project structure, follow these steps:
        movieDetails: null,
        status: null,
      },
-     extraReducers: {
-       [getMovies.pending]: (state) => {
-         state.status = 'loading';
-       },
-       [getMovies.fulfilled]: (state, { payload }) => {
-         state.movies = payload;
-         state.status = 'succeeded';
-       },
-       [getMovies.rejected]: (state) => {
-         state.status = 'failed';
-       },
-       [getMovieDetails.pending]: (state) => {
-         state.status = 'loading';
-       },
-       [getMovieDetails.fulfilled]: (state, { payload }) => {
-         state.movieDetails = payload;
-         state.status = 'succeeded';
-       },
-       [getMovieDetails.rejected]: (state) => {
-         state.status = 'failed';
-       },
+     reducers: {},
+     extraReducers: (builder) => {
+       builder
+         .addCase(getMovies.pending, (state) => {
+           state.status = 'loading';
+         })
+         .addCase(getMovies.fulfilled, (state, action) => {
+           state.movies = action.payload;
+           state.status = 'succeeded';
+         })
+         .addCase(getMovies.rejected, (state) => {
+           state.status = 'failed';
+         })
+         .addCase(getMovieDetails.pending, (state) => {
+           state.status = 'loading';
+         })
+         .addCase(getMovieDetails.fulfilled, (state, action) => {
+           state.movieDetails = action.payload;
+           state.status = 'succeeded';
+         })
+         .addCase(getMovieDetails.rejected, (state) => {
+           state.status = 'failed';
+         });
      },
    });
 
@@ -227,18 +229,18 @@ To integrate Redux into the given project structure, follow these steps:
 
    ```jsx
    import React from 'react';
-   import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+   import { Route, Routes } from 'react-router-dom';
    import MovieList from './MovieList';
    import MovieDetails from './MovieDetails';
 
    function App() {
      return (
-       <Router>
+       <div>
          <Routes>
            <Route path="/" element={<MovieList />} />
            <Route path="/movie/:id" element={<MovieDetails />} />
          </Routes>
-       </Router>
+       </div>
      );
    }
 
@@ -255,4 +257,21 @@ To integrate Redux into the given project structure, follow these steps:
 
 ### Summary
 
-By following these steps, Redux is used to manage the state of your movie data, making the state management more predictable and scalable. This setup leverages `createAsyncThunk` for handling asynchronous actions, `createSlice` for creating slices of state, and `useSelector` and `useDispatch` hooks for connecting Redux state and actions to React components. This approach ensures a clean and maintainable structure for your React application.
+This setup ensures that Redux is used to manage the state for fetching and displaying movie data, making the application scalable and maintainable. The project structure uses `createAsyncThunk` for handling asynchronous actions, `createSlice` for creating slices of state, and `useSelector` and `useDispatch` hooks for connecting Redux state and actions to React components. This approach ensures a clean and maintainable structure for your React application.
+
+**File structure:**
+```
+movie-app
+├── public
+│   └── index.html
+├── src
+│   ├── api.js
+│   ├── App.js
+│   ├── index.js
+│   ├── movieSlice.js
+│   ├── MovieList.js
+│   ├── MovieDetails.js
+│   └── store.js
+├── package.json
+└── README.md
+```
