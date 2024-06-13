@@ -1,4 +1,3 @@
-Sure, let's build upon your existing content to create a comprehensive tutorial covering Git basics, branching, and reverting changes.
 
 ## Chapter 1: Setting Up Your GitHub Repository
 
