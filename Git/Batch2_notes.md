@@ -73,7 +73,7 @@
    Modify `file.txt` and commit the changes:
 
    ```bash
-   $ echo "Adding a plot twist" >> file.txt
+   # Create a file called file.txt using vscode.
    $ git add file.txt
    $ git commit -m "Add a plot twist"
    ```
@@ -108,28 +108,17 @@ This tutorial will guide you through the process of using `git revert` to undo c
    First, let's add and commit two new files:
 
    ```bash
-   $ echo "Initial content" > testrevert1.txt
-   $ echo "Initial content" > testrevert2.txt
-   $ git add .
-   $ git commit -m "adding empty files"
+   $ Add file revert1.txt (create using vscode ) and add some text.
+  
+   $ git add revert1.txt
+   $ git commit -m "adding revert1.txt"
    ```
 
-   This creates a commit with the message "adding empty files" and adds two new files, `testrevert1.txt` and `testrevert2.txt`.
+   This creates a commit with the message "adding empty files" and adds one new file, revert1.txt.
 
-2. **Modify and Commit Changes**
 
-   Next, we make changes to `testrevert1.txt` and `testrevert2.txt` and commit those changes:
 
-   ```bash
-   $ echo "Some changes" >> testrevert1.txt
-   $ echo "Some changes" >> testrevert2.txt
-   $ git add .
-   $ git commit -m "Made changes in testrevert1 and testrevert2"
-   ```
-
-   This creates a new commit with the message "Made changes in testrevert1 and testrevert2".
-
-3. **View Commit History**
+2. **View Commit History**
 
    To see the commit history, use:
 
@@ -141,10 +130,10 @@ This tutorial will guide you through the process of using `git revert` to undo c
 
    ```bash
    d6562e2 (HEAD -> main) Made changes in testrevert1 and testrevert2
-   0b34283 adding empty files
+   0b34283 adding new file
    ```
 
-4. **Revert the Last Commit**
+3. **Revert the Last Commit**
 
    To revert the commit `d6562e2`, use:
 
