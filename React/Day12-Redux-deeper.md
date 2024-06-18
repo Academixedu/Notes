@@ -173,53 +173,287 @@ Here are the questions along with their answers based on the provided example mo
     - **Answer:** Redux provides a robust solution for complex state management with middleware support and DevTools, but it can introduce boilerplate and complexity. Context API is simpler for small to medium applications but lacks built-in support for async actions and middleware.
 
 
-When a new genre is selected, the application fetches a new list of movies from the TMDB API, and the movies that do not belong to the selected genre are replaced in the Redux store. Let's break down the process in more detail:
+51. **What are the different reducers used here ?
+In the provided Redux slice (`movieSlice.js`), there are two types of reducers: synchronous reducers defined in the `reducers` field, and asynchronous reducers handled by `extraReducers`. Here's a detailed look at each:
 
-### Key Concepts
+### Synchronous Reducers
 
-1. **Initial State:**
-   - The initial state includes an empty array for movies and a null value for `selectedGenre`.
+These reducers handle synchronous actions. In the provided example, there is one synchronous reducer:
 
+1. **setGenre:**
+   - **Description:** Updates the `selectedGenre` state with the payload value.
+   - **Action:** This action is dispatched when the user selects a genre from the sidebar.
+   - **Reducer Function:**
+     ```javascript
+     reducers: {
+       setGenre: (state, action) => {
+         console.log("Genre set to:", action.payload); // Debugging message
+         state.selectedGenre = action.payload;
+       },
+     },
+     ```
+
+### Asynchronous Reducers
+
+These reducers handle asynchronous actions, such as fetching data from an API. The asynchronous actions are defined using `createAsyncThunk`, and the corresponding reducers handle different states (pending, fulfilled, rejected) of these actions.
+
+1. **getMovies:**
+   - **Description:** Fetches movies based on the selected genre. Handles three states: pending, fulfilled, and rejected.
+   - **Action:** Dispatched when the application needs to fetch movies, either initially or when a genre is selected.
+   - **Reducers:**
+     ```javascript
+     extraReducers: (builder) => {
+       builder
+         .addCase(getMovies.pending, (state) => {
+           state.status = 'loading';
+         })
+         .addCase(getMovies.fulfilled, (state, action) => {
+           console.log("Movies fetched successfully:", action.payload); // Debugging message
+           state.movies = action.payload;
+           state.status = 'succeeded';
+         })
+         .addCase(getMovies.rejected, (state) => {
+           state.status = 'failed';
+         });
+     },
+     ```
+
+2. **getMovieDetails:**
+   - **Description:** Fetches details of a specific movie. Handles three states: pending, fulfilled, and rejected.
+   - **Action:** Dispatched when the application needs to fetch details for a selected movie.
+   - **Reducers:**
+     ```javascript
+     extraReducers: (builder) => {
+       builder
+         .addCase(getMovieDetails.pending, (state) => {
+           state.status = 'loading';
+         })
+         .addCase(getMovieDetails.fulfilled, (state, action) => {
+           state.movieDetails = action.payload;
+           state.status = 'succeeded';
+         })
+         .addCase(getMovieDetails.rejected, (state) => {
+           state.status = 'failed';
+         });
+     },
+     ```
+
+### Complete `movieSlice.js` Example
+
+Here's the complete `movieSlice.js` with both synchronous and asynchronous reducers:
+
+```javascript
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { fetchMovies, fetchMovieDetails } from './api';
+
+export const getMovies = createAsyncThunk(
+  'movies/getMovies',
+  async (genreId) => {
+    const response = await fetchMovies(genreId);
+    console.log("Fetched movies for genre:", genreId, response); // Debugging message
+    return response;
+  }
+);
+
+export const getMovieDetails = createAsyncThunk(
+  'movies/getMovieDetails',
+  async (id) => {
+    const response = await fetchMovieDetails(id);
+    return response;
+  }
+);
+
+const movieSlice = createSlice({
+  name: 'movies',
+  initialState: {
+    movies: [],
+    movieDetails: null,
+    status: null,
+    selectedGenre: null,
+  },
+  reducers: {
+    setGenre: (state, action) => {
+      console.log("Genre set to:", action.payload); // Debugging message
+      state.selectedGenre = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getMovies.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getMovies.fulfilled, (state, action) => {
+        console.log("Movies fetched successfully:", action.payload); // Debugging message
+        state.movies = action.payload;
+        state.status = 'succeeded';
+      })
+      .addCase(getMovies.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(getMovieDetails.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getMovieDetails.fulfilled, (state, action) => {
+        state.movieDetails = action.payload;
+        state.status = 'succeeded';
+      })
+      .addCase(getMovieDetails.rejected, (state) => {
+        state.status = 'failed';
+      });
+  },
+});
+
+export const { setGenre } = movieSlice.actions;
+
+export default movieSlice.reducer;
+```
+
+### Summary
+
+- **Synchronous Reducers:**
+  - `setGenre`: Updates the `selectedGenre` state.
+
+- **Asynchronous Reducers (handled in `extraReducers`):**
+  - `getMovies.pending`: Sets `status` to 'loading'.
+  - `getMovies.fulfilled`: Updates `movies` with fetched data and sets `status` to 'succeeded'.
+  - `getMovies.rejected`: Sets `status` to 'failed'.
+  - `getMovieDetails.pending`: Sets `status` to 'loading'.
+  - `getMovieDetails.fulfilled`: Updates `movieDetails` with fetched data and sets `status` to 'succeeded'.
+  - `getMovieDetails.rejected`: Sets `status` to 'failed'.
+
+These reducers together manage the state of the application by responding to actions and updating the state accordingly.
+
+52. What are different States in this example ?
+These states are updated based on the actions dispatched and the corresponding reducers handling those actions. Here’s a detailed look at each state:
+
+### State Variables
+
+1. **movies:**
+   - **Type:** Array
+   - **Description:** Holds the list of movies fetched based on the selected genre.
+   - **Initial Value:** `[]` (an empty array)
+   - **Updated By:** `getMovies.fulfilled` reducer
+
+2. **movieDetails:**
+   - **Type:** Object or `null`
+   - **Description:** Holds the detailed information of a specific movie.
+   - **Initial Value:** `null`
+   - **Updated By:** `getMovieDetails.fulfilled` reducer
+
+3. **status:**
+   - **Type:** String or `null`
+   - **Description:** Tracks the status of asynchronous operations (fetching movies or movie details). It can have values like 'loading', 'succeeded', or 'failed'.
+   - **Initial Value:** `null`
+   - **Updated By:** `getMovies.pending`, `getMovies.fulfilled`, `getMovies.rejected`, `getMovieDetails.pending`, `getMovieDetails.fulfilled`, `getMovieDetails.rejected` reducers
+
+4. **selectedGenre:**
+   - **Type:** Number or `null`
+   - **Description:** Keeps track of the currently selected movie genre.
+   - **Initial Value:** `null`
+   - **Updated By:** `setGenre` reducer
+
+### Initial State Definition
+
+Here's how the initial state is defined in the Redux slice:
+
+```javascript
+const initialState = {
+  movies: [],
+  movieDetails: null,
+  status: null,
+  selectedGenre: null,
+};
+```
+
+### State Management in Reducers
+
+1. **movies:**
+   - **Updated in:** `getMovies.fulfilled`
    ```javascript
-   const initialState = {
-     movies: [],
-     movieDetails: null,
-     status: null,
-     selectedGenre: null,
-   };
+   builder.addCase(getMovies.fulfilled, (state, action) => {
+     console.log("Movies fetched successfully:", action.payload); // Debugging message
+     state.movies = action.payload;
+     state.status = 'succeeded';
+   });
    ```
 
-2. **Selecting a Genre:**
-   - When a user selects a genre, the `setGenre` action is dispatched to update the `selectedGenre` in the state.
-   - Following this, the `getMovies` thunk is dispatched to fetch movies for the selected genre.
-
+2. **movieDetails:**
+   - **Updated in:** `getMovieDetails.fulfilled`
    ```javascript
-   const Sidebar = () => {
-     const dispatch = useDispatch();
-
-     const handleGenreClick = (genreId) => {
-       dispatch(setGenre(genreId));
-       dispatch(getMovies(genreId));
-     };
-
-     return (
-       <div>
-         <List>
-           <ListItem>
-             <Button variant="contained" onClick={() => handleGenreClick(28)}>Action</Button>
-           </ListItem>
-           <ListItem>
-             <Button variant="contained" onClick={() => handleGenreClick(35)}>Comedy</Button>
-           </ListItem>
-           {/* Add more genres as needed */}
-         </List>
-       </div>
-     );
-   };
+   builder.addCase(getMovieDetails.fulfilled, (state, action) => {
+     state.movieDetails = action.payload;
+     state.status = 'succeeded';
+   });
    ```
 
-3. **Fetching Movies for the Selected Genre:**
-   - The `getMovies` thunk makes an API request to fetch movies based on the `selectedGenre`.
+3. **status:**
+   - **Updated in:** Multiple reducers (`pending`, `fulfilled`, `rejected` states of both `getMovies` and `getMovieDetails`)
+   ```javascript
+   builder
+     .addCase(getMovies.pending, (state) => {
+       state.status = 'loading';
+     })
+     .addCase(getMovies.fulfilled, (state, action) => {
+       state.movies = action.payload;
+       state.status = 'succeeded';
+     })
+     .addCase(getMovies.rejected, (state) => {
+       state.status = 'failed';
+     })
+     .addCase(getMovieDetails.pending, (state) => {
+       state.status = 'loading';
+     })
+     .addCase(getMovieDetails.fulfilled, (state, action) => {
+       state.movieDetails = action.payload;
+       state.status = 'succeeded';
+     })
+     .addCase(getMovieDetails.rejected, (state) => {
+       state.status = 'failed';
+     });
+   ```
+
+4. **selectedGenre:**
+   - **Updated in:** `setGenre` reducer
+   ```javascript
+   reducers: {
+     setGenre: (state, action) => {
+       console.log("Genre set to:", action.payload); // Debugging message
+       state.selectedGenre = action.payload;
+     },
+   },
+   ```
+
+### Summary of State Variables
+
+- **`movies`**: Stores the list of fetched movies.
+- **`movieDetails`**: Stores the details of a specific movie.
+- **`status`**: Indicates the current status of asynchronous operations.
+- **`selectedGenre`**: Stores the currently selected movie genre.
+
+These states together help in managing the movie data, tracking the status of data fetching operations, and handling the user’s genre selection within the application.
+
+53: How status and Thunk are related ?
+
+In the context of Redux and Redux Toolkit, thunks are middleware that allow you to write action creators that return a function instead of an action. This function can perform asynchronous operations, such as API calls. The `status` state is often used to track the different stages of these asynchronous operations, providing feedback to the user about the current state of the operation (loading, success, failure).
+
+### How `status` and Thunks are Related
+
+1. **Thunks:**
+   - Thunks are created using `createAsyncThunk` in Redux Toolkit. They handle the asynchronous logic and dispatch actions based on the state of the operation (pending, fulfilled, rejected).
+   - Example thunks in the provided code are `getMovies` and `getMovieDetails`.
+
+2. **Status State:**
+   - The `status` state is used to track the current state of an asynchronous operation.
+   - The status can have values like `loading`, `succeeded`, and `failed`.
+
+3. **Updating `status` with Thunks:**
+   - When a thunk is dispatched, it goes through three stages: `pending`, `fulfilled`, and `rejected`.
+   - These stages are handled by `extraReducers` in the slice, which update the `status` state accordingly.
+
+### Example Thunk and Status Updates
+
+1. **Define Thunks:**
+   - Thunks are defined using `createAsyncThunk`. Here are two examples:
 
    ```javascript
    export const getMovies = createAsyncThunk(
@@ -229,10 +463,18 @@ When a new genre is selected, the application fetches a new list of movies from 
        return response;
      }
    );
+
+   export const getMovieDetails = createAsyncThunk(
+     'movies/getMovieDetails',
+     async (id) => {
+       const response = await fetchMovieDetails(id);
+       return response;
+     }
+   );
    ```
 
-4. **Updating the State:**
-   - When the `getMovies` thunk resolves, the `extraReducers` in the slice handle the action, updating the `movies` array in the state.
+2. **Handle Thunk Stages in `extraReducers`:**
+   - Use `extraReducers` to handle the `pending`, `fulfilled`, and `rejected` actions generated by the thunks.
 
    ```javascript
    extraReducers: (builder) => {
@@ -241,50 +483,362 @@ When a new genre is selected, the application fetches a new list of movies from 
          state.status = 'loading';
        })
        .addCase(getMovies.fulfilled, (state, action) => {
-         state.movies = action.payload;  // Replaces the movies array with new data
+         state.movies = action.payload;
          state.status = 'succeeded';
        })
        .addCase(getMovies.rejected, (state) => {
+         state.status = 'failed';
+       })
+       .addCase(getMovieDetails.pending, (state) => {
+         state.status = 'loading';
+       })
+       .addCase(getMovieDetails.fulfilled, (state, action) => {
+         state.movieDetails = action.payload;
+         state.status = 'succeeded';
+       })
+       .addCase(getMovieDetails.rejected, (state) => {
          state.status = 'failed';
        });
    },
    ```
 
-### What Happens to Movies Not in the Selected Genre?
+### Status Flow with Thunks
 
-When a new genre is selected:
-1. **Dispatch `setGenre`:** The `selectedGenre` state is updated to the new genre.
-2. **Fetch Movies:** The `getMovies` thunk fetches movies for the new genre from the TMDB API.
-3. **Replace Movies in State:** The existing `movies` array in the Redux state is replaced with the new list of movies fetched from the API. Movies from the previous genre are removed from the state.
+1. **Dispatch Thunk:**
+   - When the thunk `getMovies` is dispatched, it first goes into the `pending` state.
 
-### Example Flow
+   ```javascript
+   dispatch(getMovies(selectedGenre));
+   ```
 
-1. **User clicks "Action" genre button:**
-   - `setGenre(28)` is dispatched, setting `selectedGenre` to 28.
-   - `getMovies(28)` is dispatched, initiating an API call to fetch action movies.
+2. **Pending State:**
+   - The `status` is set to `loading`.
 
-2. **API Response:**
-   - The API returns a list of action movies.
-   - The `extraReducers` in `movieSlice` handle the `getMovies.fulfilled` action, replacing the `movies` array with the list of action movies.
+   ```javascript
+   .addCase(getMovies.pending, (state) => {
+     state.status = 'loading';
+   })
+   ```
 
-3. **State Update:**
-   - The state now contains:
-     ```javascript
-     {
-       movies: [/* list of action movies */],
-       movieDetails: null,
-       status: 'succeeded',
-       selectedGenre: 28,
-     }
-     ```
-   - Movies from the previous genre are no longer in the `movies` array.
+3. **Fulfilled State:**
+   - When the API call is successful, the `status` is set to `succeeded`, and the `movies` state is updated with the fetched data.
+
+   ```javascript
+   .addCase(getMovies.fulfilled, (state, action) => {
+     state.movies = action.payload;
+     state.status = 'succeeded';
+   })
+   ```
+
+4. **Rejected State:**
+   - If the API call fails, the `status` is set to `failed`.
+
+   ```javascript
+   .addCase(getMovies.rejected, (state) => {
+     state.status = 'failed';
+   })
+   ```
 
 ### Summary
-- **State Management:** The Redux state always reflects the currently selected genre's movies.
-- **API Requests:** A new API request is made every time a different genre is selected to fetch the relevant movies.
-- **State Update:** The `movies` array in the Redux state is replaced with the new list of movies, effectively removing movies that do not belong to the selected genre from the state.
 
-This ensures that the application only displays movies relevant to the user's current selection, maintaining a clear and focused state.
+- **Thunks** are used to perform asynchronous operations.
+- The **status** state tracks the progress of these operations, with values like `loading`, `succeeded`, and `failed`.
+- **`createAsyncThunk`** generates actions for each stage of the async operation (`pending`, `fulfilled`, `rejected`), which are handled by `extraReducers` to update the `status` and other state variables.
+
+By managing the `status` state in conjunction with thunks, you can provide meaningful feedback to the user about the state of asynchronous operations, enhancing the user experience.
+
+################
+
+In the provided Redux slice (`movieSlice.js`), different actions are created and handled to manage state changes. These actions can be divided into two categories: synchronous actions and asynchronous actions. Here's a detailed look at each:
+
+### Synchronous Actions
+
+1. **setGenre:**
+   - **Description:** This action is dispatched to update the `selectedGenre` state when the user selects a genre.
+   - **Action Type:** `movies/setGenre`
+   - **Created By:** `createSlice` in the `reducers` field.
+   - **Dispatched In:** `Sidebar` component when a genre button is clicked.
+
+### Asynchronous Actions (Thunks)
+
+These actions are created using `createAsyncThunk` to handle asynchronous operations such as fetching data from an API. Each thunk generates three action types: `pending`, `fulfilled`, and `rejected`.
+
+1. **getMovies:**
+   - **Description:** This thunk is used to fetch movies based on the selected genre.
+   - **Action Types Generated:**
+     - `movies/getMovies/pending`: Dispatched when the thunk starts, indicating a loading state.
+     - `movies/getMovies/fulfilled`: Dispatched when the API call succeeds, containing the fetched movies.
+     - `movies/getMovies/rejected`: Dispatched when the API call fails, indicating an error state.
+   - **Created By:** `createAsyncThunk`.
+   - **Dispatched In:** `MovieList` component when the component mounts or the `selectedGenre` changes.
+
+2. **getMovieDetails:**
+   - **Description:** This thunk is used to fetch details of a specific movie.
+   - **Action Types Generated:**
+     - `movies/getMovieDetails/pending`: Dispatched when the thunk starts, indicating a loading state.
+     - `movies/getMovieDetails/fulfilled`: Dispatched when the API call succeeds, containing the movie details.
+     - `movies/getMovieDetails/rejected`: Dispatched when the API call fails, indicating an error state.
+   - **Created By:** `createAsyncThunk`.
+   - **Dispatched In:** `MovieDetails` component when the component mounts with a specific movie ID.
+
+### Complete Example with Actions
+
+Here's the complete `movieSlice.js` example highlighting the actions:
+
+```javascript
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { fetchMovies, fetchMovieDetails } from './api';
+
+// Asynchronous thunk to fetch movies based on the selected genre
+export const getMovies = createAsyncThunk(
+  'movies/getMovies',
+  async (genreId) => {
+    const response = await fetchMovies(genreId);
+    console.log("Fetched movies for genre:", genreId, response); // Debugging message
+    return response;
+  }
+);
+
+// Asynchronous thunk to fetch details of a specific movie
+export const getMovieDetails = createAsyncThunk(
+  'movies/getMovieDetails',
+  async (id) => {
+    const response = await fetchMovieDetails(id);
+    return response;
+  }
+);
+
+// Create the movie slice with initial state and reducers
+const movieSlice = createSlice({
+  name: 'movies',
+  initialState: {
+    movies: [],
+    movieDetails: null,
+    status: null,
+    selectedGenre: null,
+  },
+  reducers: {
+    // Synchronous action to set the selected genre
+    setGenre: (state, action) => {
+      console.log("Genre set to:", action.payload); // Debugging message
+      state.selectedGenre = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    // Handle asynchronous actions for getMovies
+    builder
+      .addCase(getMovies.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getMovies.fulfilled, (state, action) => {
+        console.log("Movies fetched successfully:", action.payload); // Debugging message
+        state.movies = action.payload;
+        state.status = 'succeeded';
+      })
+      .addCase(getMovies.rejected, (state) => {
+        state.status = 'failed';
+      })
+      // Handle asynchronous actions for getMovieDetails
+      .addCase(getMovieDetails.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getMovieDetails.fulfilled, (state, action) => {
+        state.movieDetails = action.payload;
+        state.status = 'succeeded';
+      })
+      .addCase(getMovieDetails.rejected, (state) => {
+        state.status = 'failed';
+      });
+  },
+});
+
+// Export synchronous action creator
+export const { setGenre } = movieSlice.actions;
+
+// Export the reducer as the default export
+export default movieSlice.reducer;
+```
+
+### Summary of Actions
+
+1. **Synchronous Actions:**
+   - `setGenre`: Updates the `selectedGenre` state.
+
+2. **Asynchronous Actions (Thunks):**
+   - `getMovies`:
+     - `movies/getMovies/pending`: Indicates the start of the movie fetching operation.
+     - `movies/getMovies/fulfilled`: Indicates the successful completion of the movie fetching operation and updates the `movies` state.
+     - `movies/getMovies/rejected`: Indicates the failure of the movie fetching operation.
+   - `getMovieDetails`:
+     - `movies/getMovieDetails/pending`: Indicates the start of the movie detail fetching operation.
+     - `movies/getMovieDetails/fulfilled`: Indicates the successful completion of the movie detail fetching operation and updates the `movieDetails` state.
+     - `movies/getMovieDetails/rejected`: Indicates the failure of the movie detail fetching operation.
+
+These actions together manage the state of the application by responding to user interactions and asynchronous operations, ensuring the state is consistently updated and reflected in the UI.
+#############################
+
+In the provided `movieSlice.js`, there are different action creators that are responsible for creating actions. Action creators can be categorized into two types: synchronous action creators and asynchronous action creators (thunks). Here’s a detailed look at each:
+
+### Synchronous Action Creators
+
+1. **setGenre:**
+   - **Description:** A synchronous action creator that creates an action to update the `selectedGenre` state.
+   - **Usage:** This action creator is used when the user selects a genre from the sidebar.
+   - **Action Type:** `movies/setGenre`
+   - **Created By:** `createSlice` in the `reducers` field.
+   - **Example:**
+     ```javascript
+     const movieSlice = createSlice({
+       name: 'movies',
+       initialState: {
+         movies: [],
+         movieDetails: null,
+         status: null,
+         selectedGenre: null,
+       },
+       reducers: {
+         setGenre: (state, action) => {
+           state.selectedGenre = action.payload;
+         },
+       },
+       extraReducers: (builder) => {
+         // Handle asynchronous actions here
+       },
+     });
+
+     export const { setGenre } = movieSlice.actions;
+     ```
+
+### Asynchronous Action Creators (Thunks)
+
+These action creators handle asynchronous operations such as fetching data from an API. They are created using `createAsyncThunk` and automatically generate `pending`, `fulfilled`, and `rejected` action types.
+
+1. **getMovies:**
+   - **Description:** An asynchronous action creator (thunk) that fetches movies based on the selected genre.
+   - **Usage:** This thunk is dispatched to fetch movies from the API and update the `movies` state.
+   - **Action Types Generated:**
+     - `movies/getMovies/pending`: Dispatched when the thunk starts, indicating a loading state.
+     - `movies/getMovies/fulfilled`: Dispatched when the API call succeeds, containing the fetched movies.
+     - `movies/getMovies/rejected`: Dispatched when the API call fails, indicating an error state.
+   - **Created By:** `createAsyncThunk`
+   - **Example:**
+     ```javascript
+     export const getMovies = createAsyncThunk(
+       'movies/getMovies',
+       async (genreId) => {
+         const response = await fetchMovies(genreId);
+         return response;
+       }
+     );
+     ```
+
+2. **getMovieDetails:**
+   - **Description:** An asynchronous action creator (thunk) that fetches details of a specific movie.
+   - **Usage:** This thunk is dispatched to fetch movie details from the API and update the `movieDetails` state.
+   - **Action Types Generated:**
+     - `movies/getMovieDetails/pending`: Dispatched when the thunk starts, indicating a loading state.
+     - `movies/getMovieDetails/fulfilled`: Dispatched when the API call succeeds, containing the movie details.
+     - `movies/getMovieDetails/rejected`: Dispatched when the API call fails, indicating an error state.
+   - **Created By:** `createAsyncThunk`
+   - **Example:**
+     ```javascript
+     export const getMovieDetails = createAsyncThunk(
+       'movies/getMovieDetails',
+       async (id) => {
+         const response = await fetchMovieDetails(id);
+         return response;
+       }
+     );
+     ```
+
+### Complete Example with Action Creators
+
+Here's the complete `movieSlice.js` with both synchronous and asynchronous action creators:
+
+```javascript
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { fetchMovies, fetchMovieDetails } from './api';
+
+// Asynchronous action creator (thunk) to fetch movies based on the selected genre
+export const getMovies = createAsyncThunk(
+  'movies/getMovies',
+  async (genreId) => {
+    const response = await fetchMovies(genreId);
+    return response;
+  }
+);
+
+// Asynchronous action creator (thunk) to fetch details of a specific movie
+export const getMovieDetails = createAsyncThunk(
+  'movies/getMovieDetails',
+  async (id) => {
+    const response = await fetchMovieDetails(id);
+    return response;
+  }
+);
+
+// Create the movie slice with initial state and reducers
+const movieSlice = createSlice({
+  name: 'movies',
+  initialState: {
+    movies: [],
+    movieDetails: null,
+    status: null,
+    selectedGenre: null,
+  },
+  reducers: {
+    // Synchronous action creator to set the selected genre
+    setGenre: (state, action) => {
+      state.selectedGenre = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    // Handle asynchronous actions for getMovies
+    builder
+      .addCase(getMovies.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getMovies.fulfilled, (state, action) => {
+        state.movies = action.payload;
+        state.status = 'succeeded';
+      })
+      .addCase(getMovies.rejected, (state) => {
+        state.status = 'failed';
+      })
+      // Handle asynchronous actions for getMovieDetails
+      .addCase(getMovieDetails.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getMovieDetails.fulfilled, (state, action) => {
+        state.movieDetails = action.payload;
+        state.status = 'succeeded';
+      })
+      .addCase(getMovieDetails.rejected, (state) => {
+        state.status = 'failed';
+      });
+  },
+});
+
+// Export synchronous action creator
+export const { setGenre } = movieSlice.actions;
+
+// Export the reducer as the default export
+export default movieSlice.reducer;
+```
+
+### Summary of Action Creators
+
+1. **Synchronous Action Creators:**
+   - `setGenre`: Creates an action to update the `selectedGenre` state.
+
+2. **Asynchronous Action Creators (Thunks):**
+   - `getMovies`:
+     - Generates actions for `pending`, `fulfilled`, and `rejected` states.
+   - `getMovieDetails`:
+     - Generates actions for `pending`, `fulfilled`, and `rejected` states.
+
+These action creators manage both synchronous state updates and asynchronous data fetching operations, ensuring the Redux store reflects the current state of the application accurately.
+
 
 
 
