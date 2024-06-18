@@ -173,107 +173,117 @@ Here are the questions along with their answers based on the provided example mo
     - **Answer:** Redux provides a robust solution for complex state management with middleware support and DevTools, but it can introduce boilerplate and complexity. Context API is simpler for small to medium applications but lacks built-in support for async actions and middleware.
 
 
-Key Concepts
-Initial State:
+When a new genre is selected, the application fetches a new list of movies from the TMDB API, and the movies that do not belong to the selected genre are replaced in the Redux store. Let's break down the process in more detail:
 
-The initial state includes an empty array for movies and a null value for selectedGenre.
-javascript
-Copy code
-const initialState = {
-  movies: [],
-  movieDetails: null,
-  status: null,
-  selectedGenre: null,
-};
-Selecting a Genre:
+### Key Concepts
 
-When a user selects a genre, the setGenre action is dispatched to update the selectedGenre in the state.
-Following this, the getMovies thunk is dispatched to fetch movies for the selected genre.
-javascript
-Copy code
-const Sidebar = () => {
-  const dispatch = useDispatch();
+1. **Initial State:**
+   - The initial state includes an empty array for movies and a null value for `selectedGenre`.
 
-  const handleGenreClick = (genreId) => {
-    dispatch(setGenre(genreId));
-    dispatch(getMovies(genreId));
-  };
+   ```javascript
+   const initialState = {
+     movies: [],
+     movieDetails: null,
+     status: null,
+     selectedGenre: null,
+   };
+   ```
 
-  return (
-    <div>
-      <List>
-        <ListItem>
-          <Button variant="contained" onClick={() => handleGenreClick(28)}>Action</Button>
-        </ListItem>
-        <ListItem>
-          <Button variant="contained" onClick={() => handleGenreClick(35)}>Comedy</Button>
-        </ListItem>
-        {/* Add more genres as needed */}
-      </List>
-    </div>
-  );
-};
-Fetching Movies for the Selected Genre:
+2. **Selecting a Genre:**
+   - When a user selects a genre, the `setGenre` action is dispatched to update the `selectedGenre` in the state.
+   - Following this, the `getMovies` thunk is dispatched to fetch movies for the selected genre.
 
-The getMovies thunk makes an API request to fetch movies based on the selectedGenre.
-javascript
-Copy code
-export const getMovies = createAsyncThunk(
-  'movies/getMovies',
-  async (genreId) => {
-    const response = await fetchMovies(genreId);
-    return response;
-  }
-);
-Updating the State:
+   ```javascript
+   const Sidebar = () => {
+     const dispatch = useDispatch();
 
-When the getMovies thunk resolves, the extraReducers in the slice handle the action, updating the movies array in the state.
-javascript
-Copy code
-extraReducers: (builder) => {
-  builder
-    .addCase(getMovies.pending, (state) => {
-      state.status = 'loading';
-    })
-    .addCase(getMovies.fulfilled, (state, action) => {
-      state.movies = action.payload;  // Replaces the movies array with new data
-      state.status = 'succeeded';
-    })
-    .addCase(getMovies.rejected, (state) => {
-      state.status = 'failed';
-    });
-},
-What Happens to Movies Not in the Selected Genre?
+     const handleGenreClick = (genreId) => {
+       dispatch(setGenre(genreId));
+       dispatch(getMovies(genreId));
+     };
+
+     return (
+       <div>
+         <List>
+           <ListItem>
+             <Button variant="contained" onClick={() => handleGenreClick(28)}>Action</Button>
+           </ListItem>
+           <ListItem>
+             <Button variant="contained" onClick={() => handleGenreClick(35)}>Comedy</Button>
+           </ListItem>
+           {/* Add more genres as needed */}
+         </List>
+       </div>
+     );
+   };
+   ```
+
+3. **Fetching Movies for the Selected Genre:**
+   - The `getMovies` thunk makes an API request to fetch movies based on the `selectedGenre`.
+
+   ```javascript
+   export const getMovies = createAsyncThunk(
+     'movies/getMovies',
+     async (genreId) => {
+       const response = await fetchMovies(genreId);
+       return response;
+     }
+   );
+   ```
+
+4. **Updating the State:**
+   - When the `getMovies` thunk resolves, the `extraReducers` in the slice handle the action, updating the `movies` array in the state.
+
+   ```javascript
+   extraReducers: (builder) => {
+     builder
+       .addCase(getMovies.pending, (state) => {
+         state.status = 'loading';
+       })
+       .addCase(getMovies.fulfilled, (state, action) => {
+         state.movies = action.payload;  // Replaces the movies array with new data
+         state.status = 'succeeded';
+       })
+       .addCase(getMovies.rejected, (state) => {
+         state.status = 'failed';
+       });
+   },
+   ```
+
+### What Happens to Movies Not in the Selected Genre?
+
 When a new genre is selected:
+1. **Dispatch `setGenre`:** The `selectedGenre` state is updated to the new genre.
+2. **Fetch Movies:** The `getMovies` thunk fetches movies for the new genre from the TMDB API.
+3. **Replace Movies in State:** The existing `movies` array in the Redux state is replaced with the new list of movies fetched from the API. Movies from the previous genre are removed from the state.
 
-Dispatch setGenre: The selectedGenre state is updated to the new genre.
-Fetch Movies: The getMovies thunk fetches movies for the new genre from the TMDB API.
-Replace Movies in State: The existing movies array in the Redux state is replaced with the new list of movies fetched from the API. Movies from the previous genre are removed from the state.
-Example Flow
-User clicks "Action" genre button:
+### Example Flow
 
-setGenre(28) is dispatched, setting selectedGenre to 28.
-getMovies(28) is dispatched, initiating an API call to fetch action movies.
-API Response:
+1. **User clicks "Action" genre button:**
+   - `setGenre(28)` is dispatched, setting `selectedGenre` to 28.
+   - `getMovies(28)` is dispatched, initiating an API call to fetch action movies.
 
-The API returns a list of action movies.
-The extraReducers in movieSlice handle the getMovies.fulfilled action, replacing the movies array with the list of action movies.
-State Update:
+2. **API Response:**
+   - The API returns a list of action movies.
+   - The `extraReducers` in `movieSlice` handle the `getMovies.fulfilled` action, replacing the `movies` array with the list of action movies.
 
-The state now contains:
-javascript
-Copy code
-{
-  movies: [/* list of action movies */],
-  movieDetails: null,
-  status: 'succeeded',
-  selectedGenre: 28,
-}
-Movies from the previous genre are no longer in the movies array.
-Summary
-State Management: The Redux state always reflects the currently selected genre's movies.
-API Requests: A new API request is made every time a different genre is selected to fetch the relevant movies.
-State Update: The movies array in the Redux state is replaced with the new list of movies, effectively removing movies that do not belong to the selected genre from the state.
+3. **State Update:**
+   - The state now contains:
+     ```javascript
+     {
+       movies: [/* list of action movies */],
+       movieDetails: null,
+       status: 'succeeded',
+       selectedGenre: 28,
+     }
+     ```
+   - Movies from the previous genre are no longer in the `movies` array.
+
+### Summary
+- **State Management:** The Redux state always reflects the currently selected genre's movies.
+- **API Requests:** A new API request is made every time a different genre is selected to fetch the relevant movies.
+- **State Update:** The `movies` array in the Redux state is replaced with the new list of movies, effectively removing movies that do not belong to the selected genre from the state.
+
 This ensures that the application only displays movies relevant to the user's current selection, maintaining a clear and focused state.
 
 
