@@ -210,4 +210,69 @@ you can selectively remove the second commit in Git using an interactive rebase.
      git push origin <branch-name> --force
      ```
 
+
+you can tag and push your Day1 class code to Git, and then pull the code for Day1, Day2, and so on as needed. Here are the steps to do this:
+
+### Tagging and Pushing Day1 Code to Git
+
+1. **Commit your changes:**
+   Make sure all your changes are committed.
+
+   ```sh
+   git add .
+   git commit -m "Day1 class code"
+   ```
+
+2. **Tag your commit:**
+   Create a tag for the Day1 code.
+
+   ```sh
+   git tag -a day1 -m "Day1 class code"
+   ```
+
+3. **Push your changes and tags to the remote repository:**
+   Push the commit and the tag to your remote repository (e.g., GitHub).
+
+   ```sh
+   git push origin main --tags
+   ```
+
+### Pulling the Code for Day1, Day2, etc.
+
+To pull the code for a specific day, you can check out the corresponding tag. Here’s how:
+
+1. **Fetch the tags from the remote repository:**
+
+   ```sh
+   git fetch --tags
+   ```
+
+2. **Check out the specific tag:**
+
+   ```sh
+   git checkout tags/day1 -b day1-branch
+   ```
+
+This will create a new branch (`day1-branch`) based on the Day1 tag. You can do the same for Day2, Day3, etc., by replacing `day1` with the appropriate tag name.
+
+### Example for Day2
+
+1. **Tag your Day2 code:**
+
+   ```sh
+   git add .
+   git commit -m "Day2 class code"
+   git tag -a day2 -m "Day2 class code"
+   git push origin main --tags
+   ```
+
+2. **Pull the Day2 code:**
+
+   ```sh
+   git fetch --tags
+   git checkout tags/day2 -b day2-branch
+   ```
+
+By following these steps, you can efficiently manage and pull your code for different days using Git tags.
+
 **Note:** Be cautious with rebasing and force pushing, especially if you are working in a shared repository, as it rewrites history and can affect other collaborators.
