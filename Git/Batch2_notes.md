@@ -275,4 +275,3 @@ This will create a new branch (`day1-branch`) based on the Day1 tag. You can do 
 
 By following these steps, you can efficiently manage and pull your code for different days using Git tags.
 
-**Note:** Be cautious with rebasing and force pushing, especially if you are working in a shared repository, as it rewrites history and can affect other collaborators.
