@@ -290,3 +290,180 @@ Final Test: Let's use our app!
    - Send a PUT request to http://localhost:8080/api/posts/1/approve
    - You should get a response with the updated post, now with approved status true
 
+######################################
+
+Certainly! I'll explain the annotations used in our blog application using the Feynman Technique. Imagine I'm explaining these to a curious child who's just learning about computers.
+
+1. @Entity
+
+This is like telling the computer, "Hey, this is a special thing we want to remember!"
+
+```java
+@Entity
+public class User {
+    // User details here
+}
+```
+
+It's like putting a sticker on a toy box that says "Important Toys Inside". It tells the computer that this class (User or Post) is something we want to store in our computer's memory (database).
+
+2. @Table
+
+This is like giving a name to our toy box.
+
+```java
+@Table(name = "users")
+public class User {
+    // User details here
+}
+```
+
+If we don't use this, the computer will use the class name (User) as the table name. But sometimes we want to give it a special name, like "users", so we use @Table.
+
+3. @Id
+
+This is like giving each toy in our box a unique sticker.
+
+```java
+@Id
+private int userId;
+```
+
+Every user or post needs something special that makes it different from all others. This is that special thing!
+
+4. @GeneratedValue
+
+This is like telling the computer, "You're in charge of making up the unique sticker numbers."
+
+```java
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private int userId;
+```
+
+We don't want to think up a new number every time we add a user or post, so we tell the computer to do it for us.
+
+5. @ManyToOne
+
+This is like saying, "This toy belongs to a specific toy box."
+
+```java
+@ManyToOne
+@JoinColumn(name = "user_id")
+private User user;
+```
+
+In our Post class, this tells the computer that each post belongs to one user, but a user can have many posts.
+
+6. @JoinColumn
+
+This is like putting a label on our toy that says which toy box it belongs to.
+
+```java
+@JoinColumn(name = "user_id")
+private User user;
+```
+
+It tells the computer how to remember which user a post belongs to.
+
+7. @Service
+
+This is like telling the computer, "This class has special jobs to do with our toys."
+
+```java
+@Service
+public class UserService {
+    // Service methods here
+}
+```
+
+It's a way of saying, "When someone wants to do something with users or posts, look here for instructions."
+
+8. @Autowired
+
+This is like magic glue that sticks things together automatically.
+
+```java
+@Autowired
+private UserRepository userRepository;
+```
+
+Instead of us having to say, "To do user stuff, we need the user toy box," the computer figures it out on its own.
+
+9. @RestController
+
+This is like saying, "This class is in charge of talking to people using our app."
+
+```java
+@RestController
+public class UserController {
+    // Controller methods here
+}
+```
+
+When someone wants to create a user or post, this class knows how to understand their request and give them an answer.
+
+10. @RequestMapping
+
+This is like giving directions to a specific room in a big building.
+
+```java
+@RequestMapping("/api/users")
+public class UserController {
+    // Controller methods here
+}
+```
+
+It tells the computer, "If someone asks about users, send them here."
+
+11. @PostMapping
+
+This is like a sign that says, "To create something new, knock on this door."
+
+```java
+@PostMapping
+public User createUser(@RequestBody User user) {
+    // Method to create user
+}
+```
+
+When someone wants to make a new user or post, the computer knows to use this method.
+
+12. @PutMapping
+
+This is like a sign that says, "To change something that already exists, knock on this door."
+
+```java
+@PutMapping("/{postId}/approve")
+public Post approvePost(@PathVariable int postId) {
+    // Method to approve post
+}
+```
+
+When someone wants to approve a post, the computer knows to use this method.
+
+13. @PathVariable
+
+This is like a special tag on the door that can change.
+
+```java
+public Post approvePost(@PathVariable int postId) {
+    // Method to approve post
+}
+```
+
+It tells the computer, "The number in the web address is important, remember it!"
+
+14. @RequestBody
+
+This is like saying, "The important information is in the letter, not on the envelope."
+
+```java
+public User createUser(@RequestBody User user) {
+    // Method to create user
+}
+```
+
+It tells the computer to look inside the request for the important user or post information.
+
+By using these special labels (annotations), we're giving the computer very specific instructions on how to handle our users and posts, just like labeling toy boxes and toys helps us keep our room organized!
+
