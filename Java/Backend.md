@@ -292,7 +292,6 @@ Final Test: Let's use our app!
 
 ######################################
 
-Certainly! I'll explain the annotations used in our blog application using the Feynman Technique. Imagine I'm explaining these to a curious child who's just learning about computers.
 
 1. @Entity
 
