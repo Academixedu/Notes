@@ -1,4 +1,3 @@
-[Here's a step-by-step Material-UI (MUI) tutorial for beginners:](https://mui.com/material-ui/getting-started/templates/)
 
 # Material-UI (MUI) Tutorial for Beginners
 
@@ -254,3 +253,7 @@ This tutorial has introduced you to the basics of Material-UI. You've learned ho
 - Implement responsive design
 
 Remember, MUI offers many more components and features. Explore the [official documentation](https://mui.com/) to learn more and experiment with different components and properties.
+
+https://github.com/gonchigars/ReactMUI.git
+
+[Here's a step-by-step Material-UI (MUI) tutorial for beginners:](https://mui.com/material-ui/getting-started/templates/)
