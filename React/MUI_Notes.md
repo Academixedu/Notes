@@ -1,4 +1,4 @@
-Here's a step-by-step Material-UI (MUI) tutorial for beginners:
+[Here's a step-by-step Material-UI (MUI) tutorial for beginners:](https://mui.com/material-ui/getting-started/templates/)
 
 # Material-UI (MUI) Tutorial for Beginners
 
