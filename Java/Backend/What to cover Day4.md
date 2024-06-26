@@ -51,7 +51,6 @@ with Spring Boot.
 
 
 
-Certainly. I'll provide detailed notes on how to implement some of these important aspects, along with code examples and explanations of how they work.
 
 1. Error Handling:
 
