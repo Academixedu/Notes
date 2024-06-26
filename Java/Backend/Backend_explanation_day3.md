@@ -47,6 +47,63 @@
    - The `@Service` annotation marks this as a service bean, allowing it to be autowired into the controller.
    - Here, `UserRepository` is autowired into the service, similar to how the service was autowired into the controller.
 
+5. Service Layer (constructor injection) --> Alternate approach
+
+Constructor injection is considered the best practice for dependency injection in Spring for several reasons:
+
+1. It ensures that the dependency (in this case, `UserRepository`) is available as soon as the bean is created.
+2. It makes the dependencies explicit and clear.
+3. It allows for immutable bean definitions.
+4. It's easier to test, as you can provide mock dependencies in unit tests.
+
+Here's how you can modify your `UserService` class to use constructor injection:
+
+```java
+package com.example.blogapp.services;
+
+import com.example.blogapp.models.User;
+import com.example.blogapp.repositories.UserRepository;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public User createUser(User user) {
+        return userRepository.save(user);
+    }
+
+    // Other methods for user management
+}
+```
+
+Key changes and explanations:
+
+1. Remove the `@Autowired` annotation from the field:
+   The `@Autowired` annotation on the field is removed. We're no longer using field injection.
+
+2. Make the field final:
+   The `userRepository` field is now declared as `final`. This ensures that it must be initialized in the constructor and cannot be changed afterwards, promoting immutability.
+
+3. Add a constructor:
+   A new constructor is added that takes `UserRepository` as a parameter. This is where the dependency will be injected.
+
+4. Remove `@Autowired` from the constructor (optional):
+   In modern versions of Spring (4.3+), the `@Autowired` annotation is not required for constructor injection if the class has only one constructor. Spring will automatically use that constructor for dependency injection. If you have multiple constructors, you should annotate the one you want Spring to use with `@Autowired`.
+
+This approach has several benefits:
+
+- It's clear from the class definition what dependencies are required.
+- The `UserRepository` is guaranteed to be non-null after object construction.
+- It's easier to provide mock dependencies in unit tests.
+- It supports the principle of programming to interfaces, as the dependency is defined through the constructor parameter.
+
+By using constructor injection, you're following Spring best practices and creating more maintainable and testable code. The functionality remains the same, but the way the dependency is provided to the class has improved.
+
 6. Repository Layer:
    The service calls `userRepository.save(user)`.
 
