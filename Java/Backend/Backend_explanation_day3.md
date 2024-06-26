@@ -75,3 +75,71 @@ This flow demonstrates how Spring's dependency injection and annotations work to
 - Spring Boot's auto-configuration sets up a lot of this automatically, reducing boilerplate code.
 
 This architecture makes the application easier to test, maintain, and scale, as each component has a clear, single responsibility.
+
+#############################################################
+
+To determine what data you need to send in Postman for the user creation API, let's reverse engineer the process step by step:
+
+1. Examine the Controller:
+   In UserController.java, we see:
+
+   ```java
+   @PostMapping
+   public User createUser(@RequestBody User user) {
+       return userService.createUser(user);
+   }
+   ```
+
+   This tells us we're sending a User object in the request body.
+
+2. Inspect the User Model:
+   In User.java, we find:
+
+   ```java
+   public class User {
+       @Id
+       @GeneratedValue(strategy = GenerationType.IDENTITY)
+       private int userId;
+       private String username;
+       private String email;
+       // getters and setters
+   }
+   ```
+
+3. Analyze the Fields:
+   - userId: This is annotated with @Id and @GeneratedValue, meaning it's automatically generated. We don't need to send this.
+   - username: This is a String field we need to provide.
+   - email: This is another String field we need to provide.
+
+4. Check for Required Fields:
+   There are no annotations like @NotNull or @Column(nullable = false), so we can't be certain if any fields are required. In a real-world scenario, you'd want to check the database schema or ask the developers.
+
+5. Determine the JSON Structure:
+   Based on the User class, our JSON should look like:
+
+   ```json
+   {
+     "username": "some_username",
+     "email": "user@example.com"
+   }
+   ```
+
+6. Set Up Postman:
+   - Method: POST
+   - URL: http://[your-base-url]/api/users
+   - Headers: Content-Type: application/json
+   - Body: Raw, JSON
+
+   ```json
+   {
+     "username": "john_doe",
+     "email": "john@example.com"
+   }
+   ```
+
+7. Additional Considerations:
+   - The actual endpoint URL depends on where your application is hosted.
+   - There might be validation logic in the service layer that isn't immediately apparent from the model.
+   - In a production app, you'd typically have more fields like password, and you'd use DTOs (Data Transfer Objects) instead of exposing entity classes directly.
+
+By following these steps, we've determined the minimum data required for the API call. However, always refer to API documentation when available, as it would provide the most accurate and complete information about required and optional fields, validation rules, and expected responses.
