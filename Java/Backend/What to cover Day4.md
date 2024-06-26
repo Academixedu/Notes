@@ -1,4 +1,3 @@
-Certainly. Here are some other important aspects to understand about this Spring Boot application:
 
 1. RESTful API Design:
    The application follows RESTful principles. For example, POST is used for creation, and the URL structure (/api/users, /api/posts) represents resources.
