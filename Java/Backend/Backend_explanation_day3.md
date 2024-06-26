@@ -103,7 +103,7 @@ This approach has several benefits:
 - It supports the principle of programming to interfaces, as the dependency is defined through the constructor parameter.
 
 By using constructor injection, you're following Spring best practices and creating more maintainable and testable code. The functionality remains the same, but the way the dependency is provided to the class has improved.
-
+########################################################
 6. Repository Layer:
    The service calls `userRepository.save(user)`.
 
