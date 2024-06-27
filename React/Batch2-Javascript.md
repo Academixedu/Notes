@@ -102,30 +102,116 @@ Inception was released in 2010
 ```
 
 8. Promises and Async/Await
+
+
+First, let's create some helper functions to simulate API calls:
+
 ```javascript
-// Promise
-function fetchMoviePromise() {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => resolve("Inception"), 1000);
+function fetchUserData(userId) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ id: userId, name: "John Doe" });
+    }, 1000);
   });
 }
-fetchMoviePromise().then(movie => console.log("Promise result:", movie));
 
-// Async/Await
-async function fetchMovie() {
-  const movie = await fetchMoviePromise();
-  console.log("Async/Await result:", movie);
+function fetchUserPosts(userId) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
+        { id: 1, title: "First post" },
+        { id: 2, title: "Second post" }
+      ]);
+    }, 1000);
+  });
 }
-fetchMovie();
+```
 
-console.log("This will appear before the Promise and Async/Await results");
+Now, let's implement the program without async/await:
+
+```javascript
+// Without async/await
+function getUserInfo(userId) {
+  console.log("Fetching user data...");
+  fetchUserData(userId)
+    .then((user) => {
+      console.log("User:", user);
+      console.log("Fetching user posts...");
+      return fetchUserPosts(userId);
+    })
+    .then((posts) => {
+      console.log("User posts:", posts);
+      console.log("Task complete!");
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+console.log("Starting without async/await");
+getUserInfo(1);
+console.log("Function called");
 ```
-Expected output (after 1 second):
+
+Now, let's implement the same program with async/await:
+
+```javascript
+// With async/await
+async function getUserInfoAsync(userId) {
+  try {
+    console.log("Fetching user data...");
+    const user = await fetchUserData(userId);
+    console.log("User:", user);
+
+    console.log("Fetching user posts...");
+    const posts = await fetchUserPosts(userId);
+    console.log("User posts:", posts);
+
+    console.log("Task complete!");
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+console.log("Starting with async/await");
+getUserInfoAsync(1);
+console.log("Function called");
 ```
-This will appear before the Promise and Async/Await results
-Promise result: Inception
-Async/Await result: Inception
+
+To see the difference, you can run both versions:
+
+```javascript
+// Run both versions
+console.log("Running without async/await:");
+getUserInfo(1);
+
+setTimeout(() => {
+  console.log("\nRunning with async/await:");
+  getUserInfoAsync(1);
+}, 3000);
 ```
+
+The output will be similar for both, but the key differences are:
+
+1. Code structure: The async/await version looks more like synchronous code, making it easier to read and understand the flow.
+
+2. Error handling: In the async/await version, we use a try/catch block, which is more similar to synchronous error handling.
+
+3. Chaining: The Promise version uses .then() chaining, while the async/await version uses normal sequential code.
+
+Both versions will output:
+
+```
+Starting
+Fetching user data...
+Function called
+User: { id: 1, name: 'John Doe' }
+Fetching user posts...
+User posts: [ { id: 1, title: 'First post' }, { id: 2, title: 'Second post' } ]
+Task complete!
+```
+
+The main advantage of async/await is that it allows you to write asynchronous code that looks and behaves more like synchronous code, making it easier to understand and maintain, especially for more complex operations.
 
 9. Modules (Import/Export)
 Assuming we have two files:
