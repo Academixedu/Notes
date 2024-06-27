@@ -1,92 +1,121 @@
+Certainly! I'll provide the expected output for each section of the tutorial. This will help students understand what to expect when they run the code.
+
 1. Variables and Constants
-
-JavaScript uses `let` and `const` for declaring variables:
-
 ```javascript
 let movieTitle = "Inception";  // Can be reassigned
 const releaseYear = 2010;      // Cannot be reassigned
+
+console.log(movieTitle);
+console.log(releaseYear);
+```
+Expected output:
+```
+Inception
+2010
 ```
 
 2. Functions
-
-Functions are blocks of reusable code:
-
 ```javascript
 function displayMovie(title, year) {
   console.log(`${title} (${year})`);
 }
-
 displayMovie("The Matrix", 1999);
+```
+Expected output:
+```
+The Matrix (1999)
 ```
 
 3. Arrow Functions
-
-A more concise way to write functions:
-
 ```javascript
 const displayMovie = (title, year) => {
   console.log(`${title} (${year})`);
 };
-
 displayMovie("Interstellar", 2014);
+```
+Expected output:
+```
+Interstellar (2014)
 ```
 
 4. Arrays and Array Methods
-
-Arrays store collections of data:
-
 ```javascript
 const movies = ["Inception", "The Matrix", "Interstellar"];
-
 // forEach to iterate
+console.log("forEach output:");
 movies.forEach(movie => console.log(movie));
 
 // map to transform
 const upperCaseMovies = movies.map(movie => movie.toUpperCase());
+console.log("\nmap output:");
+console.log(upperCaseMovies);
 
 // filter to select
 const moviesWithI = movies.filter(movie => movie.startsWith("I"));
+console.log("\nfilter output:");
+console.log(moviesWithI);
+```
+Expected output:
+```
+forEach output:
+Inception
+The Matrix
+Interstellar
+
+map output:
+["INCEPTION", "THE MATRIX", "INTERSTELLAR"]
+
+filter output:
+["Inception", "Interstellar"]
 ```
 
 5. Objects
-
-Objects store key-value pairs:
-
 ```javascript
 const movie = {
   title: "Inception",
   year: 2010,
   director: "Christopher Nolan"
 };
-
 console.log(movie.title);  // Accessing a property
+console.log(movie.year);
+console.log(movie.director);
+```
+Expected output:
+```
+Inception
+2010
+Christopher Nolan
 ```
 
 6. Destructuring
-
-Extracting values from objects or arrays:
-
 ```javascript
 const { title, year } = movie;
-console.log(title);  // "Inception"
+console.log(title);
+console.log(year);
 
 const [firstMovie, secondMovie] = movies;
-console.log(firstMovie);  // "Inception"
+console.log(firstMovie);
+console.log(secondMovie);
+```
+Expected output:
+```
+Inception
+2010
+Inception
+The Matrix
 ```
 
 7. Template Literals
-
-For string interpolation:
-
 ```javascript
 const movieInfo = `${movie.title} was released in ${movie.year}`;
 console.log(movieInfo);
 ```
+Expected output:
+```
+Inception was released in 2010
+```
 
 8. Promises and Async/Await
-
-For handling asynchronous operations:
-
 ```javascript
 // Promise
 function fetchMoviePromise() {
@@ -94,44 +123,58 @@ function fetchMoviePromise() {
     setTimeout(() => resolve("Inception"), 1000);
   });
 }
-
-fetchMoviePromise().then(movie => console.log(movie));
+fetchMoviePromise().then(movie => console.log("Promise result:", movie));
 
 // Async/Await
 async function fetchMovie() {
   const movie = await fetchMoviePromise();
-  console.log(movie);
+  console.log("Async/Await result:", movie);
 }
-
 fetchMovie();
+
+console.log("This will appear before the Promise and Async/Await results");
+```
+Expected output (after 1 second):
+```
+This will appear before the Promise and Async/Await results
+Promise result: Inception
+Async/Await result: Inception
 ```
 
 9. Modules (Import/Export)
+Assuming we have two files:
 
-For organizing code into reusable files:
-
+movieUtils.js:
 ```javascript
-// In movieUtils.js
 export const formatMovie = (title, year) => `${title} (${year})`;
+```
 
-// In main.js
+main.js:
+```javascript
 import { formatMovie } from './movieUtils.js';
 console.log(formatMovie("Inception", 2010));
 ```
+Expected output when running main.js:
+```
+Inception (2010)
+```
 
 10. Error Handling
-
-Using try/catch for handling errors:
-
 ```javascript
 async function fetchMovie() {
   try {
     const response = await fetch('https://api.example.com/movies/1');
     const movie = await response.json();
-    console.log(movie);
+    console.log("Fetched movie:", movie);
   } catch (error) {
     console.error('Error fetching movie:', error);
   }
 }
+fetchMovie();
+```
+Expected output (assuming the fetch fails):
+```
+Error fetching movie: TypeError: Failed to fetch
 ```
 
+These outputs provide a clear expectation of what students should see when they run each piece of code. This allows them to experiment with changes and observe how those changes affect the output, enhancing their understanding of JavaScript concepts.
