@@ -45,15 +45,6 @@ const movies = ["Inception", "The Matrix", "Interstellar"];
 console.log("forEach output:");
 movies.forEach(movie => console.log(movie));
 
-// map to transform
-const upperCaseMovies = movies.map(movie => movie.toUpperCase());
-console.log("\nmap output:");
-console.log(upperCaseMovies);
-
-// filter to select
-const moviesWithI = movies.filter(movie => movie.startsWith("I"));
-console.log("\nfilter output:");
-console.log(moviesWithI);
 ```
 Expected output:
 ```
@@ -62,11 +53,6 @@ Inception
 The Matrix
 Interstellar
 
-map output:
-["INCEPTION", "THE MATRIX", "INTERSTELLAR"]
-
-filter output:
-["Inception", "Interstellar"]
 ```
 
 5. Objects
@@ -177,4 +163,4 @@ Expected output (assuming the fetch fails):
 Error fetching movie: TypeError: Failed to fetch
 ```
 
-These outputs provide a clear expectation of what students should see when they run each piece of code. This allows them to experiment with changes and observe how those changes affect the output, enhancing their understanding of JavaScript concepts.
+.
