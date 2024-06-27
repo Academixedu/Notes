@@ -58,27 +58,7 @@ docker run -p 8080:8080 blogapp
 
 This maps port 8080 from the container to port 8080 on your host machine.
 
-6. (Optional) Create a docker-compose.yml file:
-If you want to use Docker Compose, create a `docker-compose.yml` file in your project root:
 
-```yaml
-version: '3'
-services:
-  blogapp:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
-      - SPRING_DATASOURCE_USERNAME=sa
-      - SPRING_DATASOURCE_PASSWORD=
-```
-
-Then you can start your application using:
-
-```bash
-docker-compose up --build
-```
 
 These steps will containerize your Spring Boot application using Docker, based on your existing pom.xml file. The application will use the H2 in-memory database as configured in your application.properties.
 
