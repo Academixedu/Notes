@@ -1,4 +1,4 @@
-Certainly! I'll provide the expected output for each section of the tutorial. This will help students understand what to expect when they run the code.
+
 
 1. Variables and Constants
 ```javascript
