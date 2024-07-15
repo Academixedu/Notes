@@ -9,11 +9,25 @@
    aws s3 mb s3://your-bucket-name
    ```
 
+
 3. Configure the bucket for static website hosting:
    ```
    aws s3 website s3://your-bucket-name --index-document index.html --error-document index.html
    ```
 
+bucket-policy.json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::your-bucket-name/*"
+        }
+    ]
+}
 4. Set bucket policy for public read access:
    ```
    aws s3api put-bucket-policy --bucket your-bucket-name --policy file://bucket-policy.json
