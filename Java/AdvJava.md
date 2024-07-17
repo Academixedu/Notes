@@ -43,6 +43,50 @@ final int MAX_SPEED = 120; // This value can't be changed
 
 An interface is like a contract. It defines a set of methods that a class must implement. It's like a blueprint that says, "If you want to be considered a certain type, you must be able to do these things."
 
+interface Shape {
+    double getArea();
+}
+
+class Circle implements Shape {
+    private double radius;
+    
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+    
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+}
+
+class Rectangle implements Shape {
+    private double width;
+    private double height;
+    
+    public Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+    
+    @Override
+    public double getArea() {
+        return width * height;
+    }
+}
+
+// Using polymorphism
+public void printArea(Shape shape) {
+    System.out.println("Area: " + shape.getArea());
+}
+
+// Usage
+Circle circle = new Circle(5);
+Rectangle rectangle = new Rectangle(4, 6);
+
+printArea(circle);      // Works with Circle
+printArea(rectangle);   // Works with Rectangle
+
 Example:
 ```java
 interface Swimmable {
