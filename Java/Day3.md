@@ -77,13 +77,7 @@ while (count < 5) {
     count++;
 }
 
-// Do-While Loop Example
-int doCount = 0;
-do {
-    System.out.println("Count: " + doCount);
-    doCount++;
-} while (doCount < 5);
-```
+
 
 #### Live Coding Session (15 minutes):
 - Demonstrate writing programs using each type of loop.
