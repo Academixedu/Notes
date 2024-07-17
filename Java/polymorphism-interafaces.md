@@ -63,4 +63,4 @@ printArea(rectangle);   // Works with Rectangle
 
 In this example, the `Shape` interface allows for polymorphic behavior. The `printArea` method can work with any object that implements the `Shape` interface, demonstrating how interfaces and polymorphism work together to create flexible and extensible code.
 
-Would you like me to elaborate on any specific aspect of this relationship or provide more examples?
+
