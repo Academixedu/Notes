@@ -17,8 +17,7 @@ Replace `your-bucket-name` with your desired bucket name.
 
 ### 3. Disable default public access block
 ```bash
-aws s3api put-public-access-block --bucket your-bucket-name --public-access-block-configuration "BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false"
-```
+
 
 ### 4. Configure the bucket for static website hosting
 ```bash
