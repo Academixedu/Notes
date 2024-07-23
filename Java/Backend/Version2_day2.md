@@ -1,16 +1,6 @@
-let's expand on the Spring Boot application by introducing more functionalities and concepts. We'll cover the following:
-
-1. **Adding Request Parameters**
-2. **Using Path Variables**
-3. **Handling POST Requests**
-4. **Working with JSON Responses**
-
-Let's start with adding request parameters and using path variables.
-
 ### 1. Adding Request Parameters
 
-You can modify the `hello` method to accept request parameters. For example, let's greet the user by their name:
-
+**Code Changes:**
 ```java
 package com.example.demo;
 
@@ -28,14 +18,16 @@ public class JavaController {
 }
 ```
 
-In this code:
-- `@RequestParam` is used to extract query parameters from the URL.
-- `defaultValue` is set to "World" so if the `name` parameter is not provided, it defaults to "World".
+**Postman Testing:**
+1. **Open Postman.**
+2. **Create a new GET request.**
+3. **Enter the URL**: `http://localhost:8080/hello?name=John`.
+4. **Click on `Send`.**
+5. **Check the response**: You should see `"Hello, John!"`.
 
 ### 2. Using Path Variables
 
-Sometimes, you might want to extract values directly from the URI. For this, you can use `@PathVariable`:
-
+**Code Changes:**
 ```java
 package com.example.demo;
 
@@ -53,13 +45,16 @@ public class JavaController {
 }
 ```
 
-Here:
-- `@PathVariable` is used to extract values from the URI directly.
+**Postman Testing:**
+1. **Open Postman.**
+2. **Create a new GET request.**
+3. **Enter the URL**: `http://localhost:8080/hello/John`.
+4. **Click on `Send`.**
+5. **Check the response**: You should see `"Hello, John!"`.
 
 ### 3. Handling POST Requests
 
-Next, let's handle POST requests. POST requests are typically used to submit data to be processed to a specified resource. We will also introduce a new class to hold the data.
-
+**Code Changes:**
 ```java
 package com.example.demo;
 
@@ -89,14 +84,23 @@ class Greeting {
 }
 ```
 
-In this example:
-- `@RequestBody` binds the body of the request to the `Greeting` object.
-- `Greeting` class has a simple property `name` with its getter and setter.
+**Postman Testing:**
+1. **Open Postman.**
+2. **Create a new POST request.**
+3. **Enter the URL**: `http://localhost:8080/greet`.
+4. **Go to the `Body` tab and select `raw` and `JSON` format.**
+5. **Enter the JSON data**:
+   ```json
+   {
+       "name": "John"
+   }
+   ```
+6. **Click on `Send`.**
+7. **Check the response**: You should see `"Hello, John!"`.
 
 ### 4. Working with JSON Responses
 
-Finally, let's modify our controller to return JSON responses:
-
+**Code Changes:**
 ```java
 package com.example.demo;
 
@@ -130,16 +134,15 @@ class Greeting {
 }
 ```
 
-In this code:
-- The `hello` method now returns a `Greeting` object instead of a `String`.
-- Spring Boot automatically converts the `Greeting` object to JSON format in the response.
+**Postman Testing:**
+1. **Open Postman.**
+2. **Create a new GET request.**
+3. **Enter the URL**: `http://localhost:8080/hello?name=John`.
+4. **Click on `Send`.**
+5. **Check the response**: You should see a JSON object:
+   ```json
+   {
+       "name": "John"
+   }
+   ```
 
-### Summary
-
-Today, we covered:
-1. How to add request parameters.
-2. How to use path variables.
-3. How to handle POST requests.
-4. How to work with JSON responses.
-
-These additions will help your students understand how to handle different types of requests and responses in Spring Boot applications.
