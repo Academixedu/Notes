@@ -1,3 +1,8 @@
+#### Basic react app ####
+Install Nodejs 
+npx create-react-app myapp
+cd myapp
+npm start
 
 ### Step 2: Introduction to HTML/CSS
 
