@@ -694,48 +694,6 @@ git checkout main
 ```
 ####################################
 
-Based on the image and your request to teach building this website using MUI (Material-UI) with React, I'd suggest the following plan:
-
-
-
-```tsx
-import React from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import MovieList from './components/MovieList';
-import FeaturedMovie from './components/FeaturedMovie';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#1976d2',
-    },
-  },
-});
-
-const App = () => {
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ display: 'flex' }}>
-        <Header />
-        <Sidebar />
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <FeaturedMovie />
-          <MovieList />
-        </Box>
-      </Box>
-    </ThemeProvider>
-  );
-};
-
-export default App;
-
-```
 
 ### MUI Versus HTML/CSS
 
