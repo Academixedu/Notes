@@ -422,4 +422,232 @@ container">
 </body>
 </html>
 ```
+#####################excercise ######################
+# HTML/CSS Tutorial: Building a Personal Portfolio
 
+This tutorial will guide you through creating a simple personal portfolio page, introducing HTML and CSS concepts step-by-step.
+
+## Step 1: Basic HTML Structure
+
+Create a file named `index.html` and add the following basic HTML structure:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+</head>
+<body>
+    <h1>Welcome to My Portfolio</h1>
+    <p>This is a simple portfolio page.</p>
+</body>
+</html>
+```
+
+Save the file and open it in a web browser to see the result.
+
+## Step 2: Adding More Content
+
+Let's add more content to our page. Update the `<body>` section of your HTML:
+
+```html
+<body>
+    <header>
+        <h1>John Doe</h1>
+        <p>Web Developer</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <section id="about">
+            <h2>About Me</h2>
+            <p>I'm a passionate web developer with experience in HTML, CSS, and JavaScript.</p>
+        </section>
+        
+        <section id="projects">
+            <h2>My Projects</h2>
+            <ul>
+                <li>Project 1</li>
+                <li>Project 2</li>
+                <li>Project 3</li>
+            </ul>
+        </section>
+        
+        <section id="contact">
+            <h2>Contact Me</h2>
+            <p>Email: john.doe@example.com</p>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 John Doe. All rights reserved.</p>
+    </footer>
+</body>
+```
+
+## Step 3: Introduction to CSS
+
+Now, let's add some basic styling. In the `<head>` section of your HTML, add a `<style>` tag:
+
+```html
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #35424a;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+        nav a {
+            color: #35424a;
+            text-decoration: none;
+        }
+        main {
+            padding: 20px;
+        }
+        footer {
+            background-color: #35424a;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+```
+
+## Step 4: Responsive Design
+
+Let's make our page responsive. Add the following CSS to your `<style>` tag:
+
+```css
+@media (max-width: 600px) {
+    nav ul li {
+        display: block;
+        margin-bottom: 10px;
+    }
+}
+```
+
+## Step 5: Adding More Styles
+
+Let's enhance our design further. Update your CSS in the `<style>` tag:
+
+```css
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+header {
+    background-color: #35424a;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+header h1 {
+    margin-bottom: 0;
+}
+nav {
+    background-color: #fff;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+nav a {
+    color: #35424a;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+nav a:hover {
+    color: #e74c3c;
+}
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+section {
+    margin-bottom: 30px;
+}
+h2 {
+    color: #35424a;
+    border-bottom: 2px solid #e74c3c;
+    padding-bottom: 10px;
+}
+footer {
+    background-color: #35424a;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+@media (max-width: 600px) {
+    nav ul li {
+        display: block;
+        margin-bottom: 10px;
+    }
+    main {
+        padding: 10px;
+    }
+}
+```
+
+## Final Result
+
+You now have a beautiful, responsive personal portfolio page! Here's what you've learned:
+
+1. Basic HTML structure
+2. Semantic HTML elements (header, nav, main, section, footer)
+3. CSS styling (colors, fonts, layout)
+4. Responsive design with media queries
+5. CSS transitions for interactive elements
+
+Feel free to customize the content, colors, and styles to make it your own. You can also continue to enhance this page by adding images, more detailed project descriptions, or even a contact form.
+
+##############
