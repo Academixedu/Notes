@@ -656,6 +656,7 @@ You now have a beautiful, responsive personal portfolio page! Here's what you've
 Feel free to customize the content, colors, and styles to make it your own. You can also continue to enhance this page by adding images, more detailed project descriptions, or even a contact form.
 
 ##############
+```
 Git concepts..
 
 mkdir my-git-repo
@@ -689,4 +690,5 @@ git commit -m "Add fifth line"
 git checkout v1.0.0
 
 git checkout main
+```
 ####################################
