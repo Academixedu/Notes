@@ -656,3 +656,37 @@ You now have a beautiful, responsive personal portfolio page! Here's what you've
 Feel free to customize the content, colors, and styles to make it your own. You can also continue to enhance this page by adding images, more detailed project descriptions, or even a contact form.
 
 ##############
+Git concepts..
+
+mkdir my-git-repo
+cd my-git-repo
+git init
+
+echo "First line" > myfile.txt
+git add myfile.txt
+git commit -m "Add first line"
+
+echo "Second line" >> myfile.txt
+git add myfile.txt
+git commit -m "Add second line"
+
+echo "Third line" >> myfile.txt
+git add myfile.txt
+git commit -m "Add third line"
+
+git tag v1.0.0
+
+git reset --hard v1.0.0
+
+echo "Fourth line" >> myfile.txt
+git add myfile.txt
+git commit -m "Add fourth line"
+
+echo "Fifth line" >> myfile.txt
+git add myfile.txt
+git commit -m "Add fifth line"
+
+git checkout v1.0.0
+
+git checkout main
+####################################
