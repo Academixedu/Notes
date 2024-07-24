@@ -835,6 +835,75 @@ function App() {
 export default App;
 ```
 
++--------------------------------------------------+
+|                     AppBar                       |
+| (position="static")                              |
+|  +--------------------------------------------+  |
+|  |               Toolbar                      |  |
+|  |  +---------------------------------------+ |  |
+|  |  | Typography (variant="h6")             | |  |
+|  |  | "My Website"                          | |  |
+|  |  +---------------------------------------+ |  |
+|  +--------------------------------------------+  |
++--------------------------------------------------+
+|                   Container                      |
+| (centers content, provides max-width)            |
+|  +--------------------------------------------+  |
+|  |        Grid (container, spacing={3})       |  |
+|  |  +----------------+---------------------+  |  |
+|  |  |     Sidebar    |    Main Content     |  |  |
+|  |  | Grid item      | Grid item           |  |  |
+|  |  | (xs=12, md=3)  | (xs=12, md=9)       |  |  |
+|  |  |  +-----------+ |  +-----------------+|  |  |
+|  |  |  |   Paper   | |  |      Paper      ||  |  |
+|  |  |  |  +-------+| |  |  +-------------+||  |  |
+|  |  |  |  |Typography| |  |  Typography   ||  |  |
+|  |  |  |  |"Sidebar" | |  |  "Main Content"||  |  |
+|  |  |  |  +-------+| |  |  +-------------+||  |  |
+|  |  |  |  |   ul   | |  |  Typography     ||  |  |
+|  |  |  |  | - Link 1| |  |  "This is..."  ||  |  |
+|  |  |  |  | - Link 2| |  |                ||  |  |
+|  |  |  |  | - Link 3| |  |                ||  |  |
+|  |  |  |  +-------+| |  +----------------+||  |  |
+|  |  |  +-----------+ |                     |  |  |
+|  |  +----------------+---------------------+  |  |
+|  +--------------------------------------------+  |
++--------------------------------------------------+
+
+Configuration Details:
+
+1. AppBar:
+   - position="static" (stays at the top, doesn't scroll)
+
+2. Toolbar:
+   - Default configuration (provides padding and alignment)
+
+3. Typography:
+   - In AppBar: variant="h6" (heading level 6 styling)
+   - In Sidebar: variant="h6"
+   - In Main Content: 
+     - First instance: variant="h5"
+     - Second instance: default (body text)
+
+4. Container:
+   - Default configuration (centers content, provides max-width)
+
+5. Grid:
+   - container prop (creates a flex container)
+   - spacing={3} (adds space between grid items)
+
+6. Grid items:
+   - Sidebar: xs={12} md={3} (full width on small screens, 1/4 width on medium+)
+   - Main Content: xs={12} md={9} (full width on small screens, 3/4 width on medium+)
+
+7. Paper:
+   - style={{ padding: '20px' }} (adds internal spacing)
+
+Note: The layout is responsive. On smaller screens (xs), 
+both sidebar and main content will stack vertically, 
+each taking full width. On medium and larger screens (md+), 
+they will be side by side with the specified proportions.
+
 ## Step 3: Adding a Button
 
 Let's add a button to our layout to see how MUI handles interactive elements.
