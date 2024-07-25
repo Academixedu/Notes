@@ -153,3 +153,152 @@ This example demonstrates how to:
 4. Position a floating action button at the bottom-right
 
 Remember, the key to mastering component placement is practice. Experiment with these techniques, and soon you'll be creating complex, responsive layouts with ease!
+
+```
+
+import React from 'react';
+import { 
+  AppBar, Toolbar, Typography, Container, Box, Paper, Grid, 
+  List, ListItem, ListItemIcon, ListItemText, IconButton, 
+  Card, CardContent, CardHeader, Avatar, Button
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import HomeIcon from '@mui/icons-material/Home';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PersonIcon from '@mui/icons-material/Person';
+
+// Simple Bar Chart component
+const SimpleBarChart = ({ data }) => (
+  <Box sx={{ display: 'flex', alignItems: 'flex-end', height: 200, mt: 2 }}>
+    {data.map((item, index) => (
+      <Box
+        key={index}
+        sx={{
+          width: `${100 / data.length}%`,
+          height: `${(item.value / Math.max(...data.map(d => d.value))) * 100}%`,
+          backgroundColor: 'primary.main',
+          m: 0.5,
+          position: 'relative',
+        }}
+      >
+        <Typography variant="caption" sx={{ position: 'absolute', bottom: -20, left: 0, right: 0, textAlign: 'center' }}>
+          {item.name}
+        </Typography>
+      </Box>
+    ))}
+  </Box>
+);
+
+// Mock data for the chart
+const data = [
+  { name: 'Jan', value: 400 },
+  { name: 'Feb', value: 300 },
+  { name: 'Mar', value: 600 },
+  { name: 'Apr', value: 800 },
+  { name: 'May', value: 500 },
+  { name: 'Jun', value: 700 },
+];
+
+const DashboardLayout = () => {
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Complex Dashboard
+          </Typography>
+          <IconButton color="inherit">
+            <NotificationsIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      
+      <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden' }}>
+        <Paper sx={{ width: 240, flexShrink: 0 }}>
+          <List>
+            {[
+              { text: 'Home', icon: <HomeIcon /> },
+              { text: 'Analytics', icon: <AssessmentIcon /> },
+              { text: 'Settings', icon: <SettingsIcon /> },
+              { text: 'Profile', icon: <PersonIcon /> }
+            ].map((item, index) => (
+              <ListItem button key={item.text}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+        
+        <Box component="main" sx={{ flexGrow: 1, p: 3, overflow: 'auto' }}>
+          <Container maxWidth="lg">
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={8}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 300 }}>
+                  <Typography variant="h6" gutterBottom>Monthly Sales</Typography>
+                  <SimpleBarChart data={data} />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 300 }}>
+                  <Typography variant="h6" gutterBottom>Recent Activity</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText primary="New user registered" secondary="2 minutes ago" />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText primary="New order received" secondary="15 minutes ago" />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText primary="Server update completed" secondary="1 hour ago" />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Card>
+                  <CardHeader
+                    avatar={<Avatar>JD</Avatar>}
+                    title="John Doe"
+                    subheader="Top Performer"
+                  />
+                  <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                      John has exceeded sales targets for 3 consecutive months.
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h5" component="div">
+                      Quick Actions
+                    </Typography>
+                    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-around' }}>
+                      <Button variant="contained" color="primary">
+                        New Report
+                      </Button>
+                      <Button variant="outlined" color="secondary">
+                        Send Invite
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Container>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+export default DashboardLayout;
+
+```
