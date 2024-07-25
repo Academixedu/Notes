@@ -264,7 +264,7 @@ const DashboardLayout = () => {
                 <Card>
                   <CardHeader
                     avatar={<Avatar>JD</Avatar>}
-                    title="John Doe"
+                    title="Shashank Gonchigar"
                     subheader="Top Performer"
                   />
                   <CardContent>
