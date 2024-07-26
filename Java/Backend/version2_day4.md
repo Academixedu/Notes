@@ -142,3 +142,126 @@ Hello, Alice!
 3. **Modularity**: You can add new greeting services without changing existing code.
 
 That's dependency injection in Spring Boot! It's like building a robot with interchangeable parts, making your code flexible and easy to change.
+
+
+##########################Unit Testing ##############################
+
+```java
+package com.example.demo.controller;
+
+import com.example.demo.service.GreetingService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(GreetingController.class)
+public class GreetingControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private GreetingService greetingService;
+
+    @Test
+    public void testGreet() throws Exception {
+        when(greetingService.greet("World")).thenReturn("Hello, World!");
+
+        mockMvc.perform(get("/greet"))
+               .andExpect(status().isOk())
+               .andExpect(content().string("Hello, World!"));
+    }
+
+    @Test
+    public void testGreetWithName() throws Exception {
+        when(greetingService.greet("Alice")).thenReturn("Hello, Alice!");
+
+        mockMvc.perform(get("/greet").param("name", "Alice"))
+               .andExpect(status().isOk())
+               .andExpect(content().string("Hello, Alice!"));
+    }
+}
+
+```
+
+Now, let's break down this test class and explain how it works:
+
+1. **Test Class Setup**:
+   ```java
+   @WebMvcTest(GreetingController.class)
+   public class GreetingControllerTest {
+   ```
+   - `@WebMvcTest` is a Spring Boot test annotation that sets up the test environment for testing MVC controllers. It only loads the specified controller and its dependencies, making the tests faster.
+
+2. **Mocking the MVC Context**:
+   ```java
+   @Autowired
+   private MockMvc mockMvc;
+   ```
+   - `MockMvc` is provided by Spring to simulate HTTP requests and responses without starting a full HTTP server.
+
+3. **Mocking the Service**:
+   ```java
+   @MockBean
+   private GreetingService greetingService;
+   ```
+   - `@MockBean` creates a mock of `GreetingService` and adds it to the Spring application context. This mock will replace any existing bean of the same type in the application context.
+
+4. **Writing Test Methods**:
+   ```java
+   @Test
+   public void testGreet() throws Exception {
+       when(greetingService.greet("World")).thenReturn("Hello, World!");
+
+       mockMvc.perform(get("/greet"))
+              .andExpect(status().isOk())
+              .andExpect(content().string("Hello, World!"));
+   }
+   ```
+   - We use Mockito's `when().thenReturn()` to define what the mock service should return when called with specific parameters.
+   - `mockMvc.perform()` simulates an HTTP GET request to "/greet".
+   - We then use `andExpect()` to verify the response status and content.
+
+5. **Testing with Parameters**:
+   ```java
+   @Test
+   public void testGreetWithName() throws Exception {
+       when(greetingService.greet("Alice")).thenReturn("Hello, Alice!");
+
+       mockMvc.perform(get("/greet").param("name", "Alice"))
+              .andExpect(status().isOk())
+              .andExpect(content().string("Hello, Alice!"));
+   }
+   ```
+   - This test demonstrates how to test the endpoint with a query parameter.
+
+Here's why this approach is powerful for testing:
+
+1. **Isolation**: We're testing the controller in isolation. We don't need to worry about the actual implementation of `GreetingService`.
+
+2. **Control**: We can easily control what the mock service returns, allowing us to test different scenarios.
+
+3. **Speed**: These tests don't require a full application context or database, so they run quickly.
+
+4. **Flexibility**: We can easily test error conditions by making our mock service throw exceptions.
+
+To run these tests, you'll need to add the following dependencies to your `pom.xml` if they're not already there:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+
+This includes JUnit, Mockito, and Spring Test libraries.
+
+By using dependency injection and mocking, we can easily test our controller's behavior under various conditions without needing to set up complex test environments or worry about the implementation details of our services. This approach allows for more robust and maintainable test suites.
