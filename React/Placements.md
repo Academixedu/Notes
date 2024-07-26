@@ -315,3 +315,82 @@ In this example:
 - The button has top margin (`mt: 2`) to further separate it from the text.
 
 Remember, these spacing values are multiples of 8px. So `mt: 4` means 32px of top margin (4 * 8px).
+
+##########################
+Excercise to place buttons in diagnol.
+
+
+
+```tsx
+import React from 'react';
+import { Container, Grid, Button, Box } from '@mui/material';
+
+const DiagonalLayout = () => {
+  return (
+    <Container maxWidth="lg" sx={{ height: '100vh' }}>
+      <Grid container sx={{ height: '100%' }}>
+        <Grid item xs={4} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+          <Box sx={{ pt: 4 }}>
+            <Button variant="contained">Button 1</Button>
+          </Box>
+        </Grid>
+        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Button variant="contained">Button 2</Button>
+        </Grid>
+        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+          <Box sx={{ pb: 4 }}>
+            <Button variant="contained">Button 3</Button>
+          </Box>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
+
+export default DiagonalLayout;
+
+```
+
+Let's break down this implementation:
+
+1. **Container**: 
+   - We use a `Container` component to provide a responsive wrapper with maximum width and centered content.
+   - `sx={{ height: '100vh' }}` makes the container full viewport height.
+
+2. **Grid**:
+   - We use a `Grid container` to divide the layout into three equal columns.
+   - `sx={{ height: '100%' }}` ensures the Grid takes up the full height of the Container.
+
+3. **Grid items**:
+   - Each button is placed in a separate `Grid item` with `xs={4}`, creating three equal columns.
+
+4. **Flexbox**:
+   - Each Grid item uses flexbox for precise button positioning:
+     - First button: `alignItems: 'flex-start'` aligns to the top.
+     - Second button: `justifyContent: 'center', alignItems: 'center'` centers both horizontally and vertically.
+     - Third button: `justifyContent: 'flex-end', alignItems: 'flex-end'` aligns to the bottom-right.
+
+5. **Fine-tuning**:
+   - We use `Box` components with padding (`pt: 4` and `pb: 4`) to adjust the top and bottom buttons slightly inward.
+
+This approach offers several advantages:
+
+- It's responsive: The layout will adjust automatically on different screen sizes.
+- It uses a combination of Grid for overall structure and flexbox for precise positioning within each column.
+- It's more maintainable and easier to modify than absolute positioning.
+
+To use this component:
+
+```jsx
+import DiagonalLayout from './DiagonalLayout';
+
+function App() {
+  return (
+    <DiagonalLayout />
+  );
+}
+```
+
+This layout achieves the diagonal placement you requested while utilizing Grid, Container, and flexbox. It's a more flexible and responsive solution compared to absolute positioning.
+
+Would 
