@@ -382,13 +382,15 @@ This approach offers several advantages:
 To use this component:
 
 ```jsx
-import DiagonalLayout from './DiagonalLayout';
+import React from "react";
+import DiagonalLayout from "./DiagonalLayout"; // Assuming DiagonalLayout.js is in the same directory
 
 function App() {
-  return (
-    <DiagonalLayout />
-  );
+  return <DiagonalLayout />;
 }
+
+export default App;
+
 ```
 
 This layout achieves the diagonal placement you requested while utilizing Grid, Container, and flexbox. It's a more flexible and responsive solution compared to absolute positioning.
