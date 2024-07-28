@@ -725,5 +725,69 @@ After implementing the code, you should be able to explain:
    - `DemoApplication` is the entry point of the Spring Boot application, annotated with `@SpringBootApplication`.
    - `SpringApplication.run` starts the application and integrates all components.
 
+###########################
+
+Testing in Postman
+1. Retrieve All Greetings (No Authentication Required)
+Method: GET
+URL: http://localhost:8080/api/v1/greetings
+Authentication: None
+Steps:
+Open Postman.
+Create a new GET request.
+Enter http://localhost:8080/api/v1/greetings as the URL.
+Click Send.
+2. Create a New Greeting (Authentication Required)
+Method: POST
+URL: http://localhost:8080/api/v1/greetings
+Body:
+json
+Copy code
+{
+  "name": "Alice"
+}
+Authentication: Basic Auth
+Username: user
+Password: password
+Steps:
+Open Postman.
+Create a new POST request.
+Enter http://localhost:8080/api/v1/greetings as the URL.
+Go to the Body tab, select raw, choose JSON, and enter the JSON payload.
+Go to the Authorization tab, select Basic Auth, and enter the username user and password password.
+Click Send.
+3. Update an Existing Greeting (Authentication Required)
+Method: PUT
+URL: http://localhost:8080/api/v1/greetings/{id}
+Body:
+json
+Copy code
+{
+  "name": "Bob"
+}
+Authentication: Basic Auth
+Username: user
+Password: password
+Steps:
+Open Postman.
+Create a new PUT request.
+Enter http://localhost:8080/api/v1/greetings/{id} as the URL (replace {id} with the actual ID of the greeting you want to update).
+Go to the Body tab, select raw, choose JSON, and enter the JSON payload.
+Go to the Authorization tab, select Basic Auth, and enter the username user and password password.
+Click Send.
+4. Delete an Existing Greeting (Authentication Required)
+Method: DELETE
+URL: http://localhost:8080/api/v1/greetings/{id}
+Authentication: Basic Auth
+Username: user
+Password: password
+Steps:
+Open Postman.
+Create a new DELETE request.
+Enter http://localhost:8080/api/v1/greetings/{id} as the URL (replace {id} with the actual ID of the greeting you want to delete).
+Go to the Authorization tab, select Basic Auth, and enter the username user and password password.
+Click Send.
+By following these steps, you should be able to test your Spring Boot application endpoints using Postman. Each request to protected endpoints must include the authentication credentials.
+
 
 
