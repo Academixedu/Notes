@@ -789,5 +789,119 @@ Go to the Authorization tab, select Basic Auth, and enter the username user and 
 Click Send.
 By following these steps, you should be able to test your Spring Boot application endpoints using Postman. Each request to protected endpoints must include the authentication credentials.
 
+###########################
+
+1. What is the purpose of the `@Entity` annotation on the `Greeting` class?
+2. Why is the `id` field in the `Greeting` class annotated with `@Id` and `@GeneratedValue`?
+3. What validation is applied to the `name` field in the `Greeting` class?
+4. Why is a default constructor necessary in the `Greeting` class?
+5. What is the purpose of the `message` field in the `Greeting` class?
+6. How does the `GreetingRepository` interface enable database operations without explicit method implementations?
+7. What CRUD operations are automatically available through `JpaRepository`?
+8. What does the `<Greeting, Long>` in `JpaRepository<Greeting, Long>` signify?
+9. How does the `@Service` annotation on `GreetingService` affect its behavior in Spring?
+10. Why is `GreetingRepository` autowired in `GreetingService`?
+
+11. What exception is thrown in `saveGreeting` method if the name is empty or null?
+12. How does the `saveGreeting` method construct the greeting message?
+13. What does the `getAllGreetings` method in `GreetingService` return?
+14. Why does `getGreetingById` return an `Optional<Greeting>`?
+15. How does the `updateGreeting` method handle a non-existent greeting ID?
+16. What does the `deleteGreeting` method return, and why?
+17. What is the purpose of the `@RestController` annotation on `GreetingController`?
+18. How does `@RequestMapping("/api/v1/greetings")` affect the URL mapping of controller methods?
+19. What HTTP method does the `createGreeting` method in `GreetingController` respond to?
+20. Why is the `@Valid` annotation used in the `createGreeting` method parameter?
+
+21. What does `ResponseEntity` represent in the controller methods?
+22. How does the `getAllGreetings` method in the controller differ from the one in the service?
+23. What happens if a non-existent ID is passed to the `getGreetingById` method?
+24. How does the `updateGreeting` method handle updates for non-existent greetings?
+25. What HTTP status code is returned when a greeting is successfully deleted?
+26. Why is `GreetingException` a subclass of `RuntimeException`?
+27. What is the purpose of the `@ControllerAdvice` annotation on `GlobalExceptionHandler`?
+28. How does the `handleGreetingException` method improve error handling?
+29. What HTTP status is returned when a `GreetingException` is handled?
+30. Why is the `SecurityConfig` class annotated with both `@Configuration` and `@EnableWebSecurity`?
+
+31. What does `.csrf().disable()` do in the security configuration?
+32. How are public and protected endpoints differentiated in the security configuration?
+33. What authentication method is configured in `SecurityConfig`?
+34. How is the test user created in the `userDetailsService` method?
+35. Why is the H2 database dependency scope set to "runtime" in the `pom.xml`?
+36. What is the purpose of the `spring-boot-starter-validation` dependency?
+37. How does the `@Size` annotation on the `name` field affect input validation?
+38. What would happen if you tried to save a `Greeting` with a name longer than 30 characters?
+39. How does the `Optional` class enhance null handling in the service layer?
+40. What is the difference between `@PostMapping` and `@PutMapping` in the controller?
+
+41. How would you modify the `GreetingRepository` to find greetings by name?
+42. What would be the URL to access a specific greeting by ID using the provided controller?
+43. How does the `@PathVariable` annotation work in the `getGreetingById` method?
+44. What is the purpose of the `@RequestBody` annotation in the `updateGreeting` method?
+45. How would you add logging to the `GreetingService` methods?
+46. What would be the impact of removing the `@Service` annotation from `GreetingService`?
+47. How could you modify the `Greeting` entity to include a timestamp for when it was created?
+48. What changes would be needed in the controller to return greetings sorted by name?
+49. How would you implement a method to find all greetings containing a specific word in their message?
+50. What is the purpose of the `@NotBlank` annotation on the `name` field?
+
+51. How would you modify the security configuration to require authentication for all endpoints?
+52. What changes would be needed to use a database instead of in-memory authentication?
+53. How could you implement role-based access control for different greeting operations?
+54. What would be the impact of changing `GenerationType.AUTO` to `GenerationType.IDENTITY` for the `id` field?
+55. How would you add a custom query method in `GreetingRepository` to find greetings by message content?
+56. What changes would be needed to implement pagination for the `getAllGreetings` endpoint?
+57. How could you modify the `Greeting` entity to support multiple languages for the message?
+58. What would be the steps to add a new endpoint that returns the count of all greetings?
+59. How would you implement a custom validation to ensure the greeting message always ends with an exclamation mark?
+60. What changes would be needed to support updating only the name of a greeting without changing the message?
+
+61. How could you modify the `deleteGreeting` method to return the deleted greeting instead of a boolean?
+62. What would be the impact of adding `@Transactional` to methods in `GreetingService`?
+63. How would you implement a method to find all greetings created within a specific date range?
+64. What changes would be needed to support case-insensitive search by name in `GreetingRepository`?
+65. How could you modify the `Greeting` entity to include a category field with predefined values?
+66. What would be the steps to add swagger documentation to the API endpoints?
+67. How would you implement a custom exception for when a greeting with a duplicate name is being created?
+68. What changes would be needed to return a 404 status instead of an empty response for non-existent greetings?
+69. How could you modify the security configuration to use JWT tokens instead of basic auth?
+70. What would be the impact of adding `@JsonIgnore` to the `id` field in the `Greeting` entity?
+
+71. How would you implement a method to bulk delete greetings by a list of IDs?
+72. What changes would be needed to support partial updates (PATCH) for the `Greeting` entity?
+73. How could you modify the `createGreeting` method to return a 409 Conflict if a greeting with the same name already exists?
+74. What would be the steps to add request logging for all API calls?
+75. How would you implement a custom annotation to restrict certain greeting operations to admin users only?
+76. What changes would be needed to support versioning of the API (e.g., v1 and v2)?
+77. How could you modify the `Greeting` entity to include a one-to-many relationship with a new `Comment` entity?
+78. What would be the impact of adding `@CreatedDate` and `@LastModifiedDate` fields to the `Greeting` entity?
+79. How would you implement a method to find the most commonly used word in all greeting messages?
+80. What changes would be needed to support caching of frequently accessed greetings?
+
+81. How could you modify the `GreetingService` to use async methods for time-consuming operations?
+82. What would be the steps to add rate limiting to the API endpoints?
+83. How would you implement a custom `RepositoryEventHandler` for the `Greeting` entity?
+84. What changes would be needed to support full-text search on greeting messages?
+85. How could you modify the application to use environment-specific configuration properties?
+86. What would be the impact of adding `@Version` for optimistic locking on the `Greeting` entity?
+87. How would you implement a custom `Converter` to transform `Greeting` entities into DTOs?
+88. What changes would be needed to support conditional indexing of the `name` field based on its length?
+89. How could you modify the `SecurityConfig` to use a custom `AuthenticationProvider`?
+90. What would be the steps to add actuator endpoints for monitoring the application?
+
+91. How would you implement a custom `HandlerInterceptor` to add custom headers to all responses?
+92. What changes would be needed to support internationalization of error messages?
+93. How could you modify the `Greeting` entity to use a custom ID generator?
+94. What would be the impact of adding `@Cacheable` to the `getGreetingById` method?
+95. How would you implement a custom `ArgumentResolver` for extracting common request parameters?
+96. What changes would be needed to support HTTP/2 in the application?
+97. How could you modify the `GreetingService` to use reactive programming with Spring WebFlux?
+98. What would be the steps to add health check endpoints for the application?
+99. How would you implement a custom `PropertyEditor` for the `Greeting` entity?
+100. What changes would be needed to support multitenancy in the application?
+
+These questions cover various aspects of the provided Spring Boot application code, from basic concepts to more advanced scenarios. They should help in thoroughly understanding the implemented features and potential extensions or modifications to the existing code.
+
 
 
