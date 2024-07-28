@@ -1,4 +1,4 @@
-Sure, let's simplify the tutorial with text diagrams to illustrate each step and show what is happening in the application.
+
 
 ### Step 1: Database Integration
 
@@ -215,6 +215,8 @@ Sure, let's simplify the tutorial with text diagrams to illustrate each step and
 
 ### Summary Diagram
 
+
+
 ```
 +-------------------+      +-----------------+     +--------------------+
 | Client            | ---> | GreetingController  | ---> | GreetingService   |
@@ -226,11 +228,54 @@ Sure, let's simplify the tutorial with text diagrams to illustrate each step and
                           +---------------+          +------------------+
                           | GreetingRepository  |    | GreetingEntity   |
                           +---------------+          +------------------+
-                                  |                         |
-                                  V                         V
-                          +-----------------+         +---------------+
-                          |  H2 Database   |         | Exception Handler |
-                          +-----------------+         +---------------+
+                                  |
+                                  V
+                          +-----------------+
+                          |  H2 Database   |
+                          +-----------------+
 ```
 
-This text-based diagram approach simplifies the understanding of what each component is doing at each step in the Spring Boot application.
+### Detailed Flow
+
+1. **Client (Postman, Browser)**
+   - Sends HTTP requests to the application.
+
+2. **GreetingController**
+   - Handles incoming HTTP requests and maps them to the appropriate service methods.
+   - Example Endpoints: 
+     - `POST /api/v1/greetings`
+     - `GET /api/v1/greetings`
+     - `GET /api/v1/greetings/{id}`
+     - `PUT /api/v1/greetings/{id}`
+     - `DELETE /api/v1/greetings/{id}`
+
+3. **GreetingService**
+   - Contains the business logic.
+   - Interacts with the `GreetingRepository` to perform CRUD operations on the database.
+   - Methods:
+     - `saveGreeting(String name)`
+     - `getAllGreetings()`
+     - `getGreetingById(Long id)`
+     - `updateGreeting(Long id, Greeting greeting)`
+     - `deleteGreeting(Long id)`
+
+4. **GreetingRepository**
+   - Interface for database operations.
+   - Extends `JpaRepository` which provides methods like `save()`, `findAll()`, `findById()`, `deleteById()`.
+
+5. **GreetingEntity**
+   - Represents the `Greeting` table in the database.
+   - Annotated with `@Entity`.
+
+6. **H2 Database**
+   - In-memory database used for storing `Greeting` entities.
+
+### Flow Example
+
+1. **Client Request**: Sends a `POST` request to `/api/v1/greetings` with a greeting name.
+2. **GreetingController**: Receives the request and calls the `GreetingService.saveGreeting(name)` method.
+3. **GreetingService**: Validates the name, creates a new `Greeting` entity, and calls `GreetingRepository.save(greeting)`.
+4. **GreetingRepository**: Saves the `Greeting` entity to the H2 database.
+5. **Response**: The saved `Greeting` entity is returned back through the service and controller to the client.
+
+This diagram and explanation should clarify the proper flow of interactions in your Spring Boot application.
