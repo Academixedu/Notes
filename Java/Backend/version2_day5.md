@@ -726,69 +726,76 @@ After implementing the code, you should be able to explain:
    - `SpringApplication.run` starts the application and integrates all components.
 
 ###########################
+## Testing in Postman
 
-Testing in Postman
-1. Retrieve All Greetings (No Authentication Required)
-Method: GET
-URL: http://localhost:8080/api/v1/greetings
-Authentication: None
-Steps:
-Open Postman.
-Create a new GET request.
-Enter http://localhost:8080/api/v1/greetings as the URL.
-Click Send.
-2. Create a New Greeting (Authentication Required)
-Method: POST
-URL: http://localhost:8080/api/v1/greetings
-Body:
-json
-Copy code
-{
-  "name": "Alice"
-}
-Authentication: Basic Auth
-Username: user
-Password: password
-Steps:
-Open Postman.
-Create a new POST request.
-Enter http://localhost:8080/api/v1/greetings as the URL.
-Go to the Body tab, select raw, choose JSON, and enter the JSON payload.
-Go to the Authorization tab, select Basic Auth, and enter the username user and password password.
-Click Send.
-3. Update an Existing Greeting (Authentication Required)
-Method: PUT
-URL: http://localhost:8080/api/v1/greetings/{id}
-Body:
-json
-Copy code
-{
-  "name": "Bob"
-}
-Authentication: Basic Auth
-Username: user
-Password: password
-Steps:
-Open Postman.
-Create a new PUT request.
-Enter http://localhost:8080/api/v1/greetings/{id} as the URL (replace {id} with the actual ID of the greeting you want to update).
-Go to the Body tab, select raw, choose JSON, and enter the JSON payload.
-Go to the Authorization tab, select Basic Auth, and enter the username user and password password.
-Click Send.
-4. Delete an Existing Greeting (Authentication Required)
-Method: DELETE
-URL: http://localhost:8080/api/v1/greetings/{id}
-Authentication: Basic Auth
-Username: user
-Password: password
-Steps:
-Open Postman.
-Create a new DELETE request.
-Enter http://localhost:8080/api/v1/greetings/{id} as the URL (replace {id} with the actual ID of the greeting you want to delete).
-Go to the Authorization tab, select Basic Auth, and enter the username user and password password.
-Click Send.
+### 1. Retrieve All Greetings (No Authentication Required)
+- **Method:** GET
+- **URL:** `http://localhost:8080/api/v1/greetings`
+- **Authentication:** None
+
+**Steps:**
+1. Open Postman.
+2. Create a new GET request.
+3. Enter `http://localhost:8080/api/v1/greetings` as the URL.
+4. Click Send.
+
+### 2. Create a New Greeting (Authentication Required)
+- **Method:** POST
+- **URL:** `http://localhost:8080/api/v1/greetings`
+- **Body:**
+  ```json
+  {
+    "name": "Alice"
+  }
+  ```
+- **Authentication:** Basic Auth
+  - **Username:** user
+  - **Password:** password
+
+**Steps:**
+1. Open Postman.
+2. Create a new POST request.
+3. Enter `http://localhost:8080/api/v1/greetings` as the URL.
+4. Go to the Body tab, select raw, choose JSON, and enter the JSON payload.
+5. Go to the Authorization tab, select Basic Auth, and enter the username `user` and password `password`.
+6. Click Send.
+
+### 3. Update an Existing Greeting (Authentication Required)
+- **Method:** PUT
+- **URL:** `http://localhost:8080/api/v1/greetings/{id}`
+- **Body:**
+  ```json
+  {
+    "name": "Bob"
+  }
+  ```
+- **Authentication:** Basic Auth
+  - **Username:** user
+  - **Password:** password
+
+**Steps:**
+1. Open Postman.
+2. Create a new PUT request.
+3. Enter `http://localhost:8080/api/v1/greetings/{id}` as the URL (replace `{id}` with the actual ID of the greeting you want to update).
+4. Go to the Body tab, select raw, choose JSON, and enter the JSON payload.
+5. Go to the Authorization tab, select Basic Auth, and enter the username `user` and password `password`.
+6. Click Send.
+
+### 4. Delete an Existing Greeting (Authentication Required)
+- **Method:** DELETE
+- **URL:** `http://localhost:8080/api/v1/greetings/{id}`
+- **Authentication:** Basic Auth
+  - **Username:** user
+  - **Password:** password
+
+**Steps:**
+1. Open Postman.
+2. Create a new DELETE request.
+3. Enter `http://localhost:8080/api/v1/greetings/{id}` as the URL (replace `{id}` with the actual ID of the greeting you want to delete).
+4. Go to the Authorization tab, select Basic Auth, and enter the username `user` and password `password`.
+5. Click Send.
+
 By following these steps, you should be able to test your Spring Boot application endpoints using Postman. Each request to protected endpoints must include the authentication credentials.
-
 ###########################
 
 1. What is the purpose of the `@Entity` annotation on the `Greeting` class?
@@ -902,6 +909,167 @@ By following these steps, you should be able to test your Spring Boot applicatio
 100. What changes would be needed to support multitenancy in the application?
 
 These questions cover various aspects of the provided Spring Boot application code, from basic concepts to more advanced scenarios. They should help in thoroughly understanding the implemented features and potential extensions or modifications to the existing code.
+
+############################
+To add pagination to your Spring Boot application, you'll need to modify the repository, service, and controller layers. Here’s how you can achieve this:
+
+### Step 9: Adding Pagination
+
+#### 1. Modify the Repository
+
+Update the `GreetingRepository` to support pagination by extending `PagingAndSortingRepository`.
+
+```java
+package com.example.demo.repository;
+
+import com.example.demo.model.Greeting;
+import org.springframework.data.repository.PagingAndSortingRepository;
+
+public interface GreetingRepository extends PagingAndSortingRepository<Greeting, Long> {
+}
+```
+
+#### 2. Update the Service
+
+Add a method in the `GreetingService` to retrieve paginated greetings.
+
+```java
+package com.example.demo.service;
+
+import com.example.demo.model.Greeting;
+import com.example.demo.repository.GreetingRepository;
+import com.example.demo.exception.GreetingException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class GreetingService {
+    @Autowired
+    private GreetingRepository repository;
+
+    public Greeting saveGreeting(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new GreetingException("Name cannot be empty");
+        }
+        Greeting greeting = new Greeting(name, "Hello, " + name + "!");
+        return repository.save(greeting);
+    }
+
+    public Page<Greeting> getAllGreetings(int page, int size) {
+        return repository.findAll(PageRequest.of(page, size));
+    }
+
+    public Optional<Greeting> getGreetingById(Long id) {
+        return repository.findById(id);
+    }
+
+    public Optional<Greeting> updateGreeting(Long id, Greeting greetingDetails) {
+        return repository.findById(id)
+                .map(greeting -> {
+                    greeting.setName(greetingDetails.getName());
+                    greeting.setMessage("Hello, " + greetingDetails.getName() + "!");
+                    return repository.save(greeting);
+                });
+    }
+
+    public boolean deleteGreeting(Long id) {
+        return repository.findById(id)
+                .map(greeting -> {
+                    repository.delete(greeting);
+                    return true;
+                })
+                .orElse(false);
+    }
+}
+```
+
+#### 3. Update the Controller
+
+Add an endpoint in the `GreetingController` to handle paginated requests.
+
+```java
+package com.example.demo.controller;
+
+import com.example.demo.model.Greeting;
+import com.example.demo.service.GreetingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+@RestController
+@RequestMapping("/api/v1/greetings")
+public class GreetingController {
+    @Autowired
+    private GreetingService greetingService;
+
+    @PostMapping
+    public ResponseEntity<Greeting> createGreeting(@Valid @RequestBody Greeting greeting) {
+        Greeting savedGreeting = greetingService.saveGreeting(greeting.getName());
+        return new ResponseEntity<>(savedGreeting, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<Greeting>> getAllGreetings(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Greeting> greetings = greetingService.getAllGreetings(page, size);
+        return new ResponseEntity<>(greetings, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Greeting> getGreetingById(@PathVariable Long id) {
+        return greetingService.getGreetingById(id)
+                .map(greeting -> new ResponseEntity<>(greeting, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Greeting> updateGreeting(@PathVariable Long id, @Valid @RequestBody Greeting greeting) {
+        return greetingService.updateGreeting(id, greeting)
+                .map(updatedGreeting -> new ResponseEntity<>(updatedGreeting, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGreeting(@PathVariable Long id) {
+        if (greetingService.deleteGreeting(id)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+}
+```
+
+#### Testing Pagination in Postman
+
+1. **Retrieve Paginated Greetings (No Authentication Required)**
+   - **Method:** GET
+   - **URL:** `http://localhost:8080/api/v1/greetings?page=0&size=10`
+   - **Authentication:** None
+
+   **Steps:**
+   1. Open Postman.
+   2. Create a new GET request.
+   3. Enter `http://localhost:8080/api/v1/greetings?page=0&size=10` as the URL.
+   4. Click Send.
+
+### Reflective Questions:
+1. What is the purpose of using `PagingAndSortingRepository`?
+2. How does `PageRequest.of(page, size)` help in pagination?
+3. Why do we use `Page<Greeting>` in the service and controller methods?
+4. How can pagination improve the performance of your API?
+5. What changes would be needed to sort the results by a specific field?
+
+By following these steps, you will have added pagination to your Spring Boot application, making it easier to handle large datasets and improve the performance of your API.
 
 
 
