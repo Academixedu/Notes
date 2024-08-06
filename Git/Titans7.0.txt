@@ -15,3 +15,16 @@ Repo Already existing in Github
 5> git add . 
 6> git commit 
 7> git push....
+
+
+Create a GitHub repository.
+
+Configure Git with your username and email:
+
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+Connect your local repository to GitHub (replace <username> and <token> with your GitHub username and personal access token):
+
+git remote add origin https://github.com/lina/story.git
+git remote set-url origin https://<username>:<token>@github.com/lina/story.git
+git push -u origin main
