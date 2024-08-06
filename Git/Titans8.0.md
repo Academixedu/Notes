@@ -1,9 +1,6 @@
+```
 Create a GitHub repository.
 ```
-PS C:\Users\gonch\Desktop\Titans8\first> git clone https://github.com/gonchigars/titans8git.git
-
-```
-
 Configure Git with your username and email:
 ```
 git config --global user.name "Your Name"
@@ -14,6 +11,12 @@ git remote add origin https://github.com/lina/story.git
 git remote set-url origin https://<username>:<token>@github.com/lina/story.git
 git push -u origin main
 ```
+```
+PS C:\Users\gonch\Desktop\Titans8\first> git clone https://github.com/gonchigars/titans8git.git
+
+```
+
+
 
 Repo Already existing in Github
 
