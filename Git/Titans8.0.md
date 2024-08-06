@@ -1,4 +1,8 @@
 Create a GitHub repository.
+```
+PS C:\Users\gonch\Desktop\Titans8\first> git clone https://github.com/gonchigars/titans8git.git
+
+```
 
 Configure Git with your username and email:
 ```
