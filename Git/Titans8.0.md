@@ -17,6 +17,19 @@ PS C:\Users\gonch\Desktop\Titans8\first> git clone https://github.com/gonchigars
 ```
 
 
+```
+git branch --> how many branch, which is active branch.
+git branch Titan8
+git switch Titan8
+---> do changes here....
+git switch main
+---> change will not be shown here...
+*** Merge **
+make sure in main branch ..
+git merge <branchname>
+```
+
+
 
 Repo Already existing in Github
 
