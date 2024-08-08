@@ -40,7 +40,14 @@ Repo Already existing in Github
 5> git commit -m "messge"
 6> push code..
 
-### Scenrio 2 you have code locally, you  need to push to remote
+
+### Revert changes
+```
+git log --oneline
+git revert <commit id>
+```
+### Scenario 2 you have code locally, you  need to push to remote
+```
 1>  Create repo in remot (github.com)
 2> git init
 3> git remote add origin
@@ -48,5 +55,6 @@ Repo Already existing in Github
 5> git add . 
 6> git commit 
 7> git push....
+```
 
 
