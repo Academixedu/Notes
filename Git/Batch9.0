@@ -1,0 +1,230 @@
+Course Levels
+Level 1: Git Basics
+
+Understanding version control
+Installing Git
+Basic Git commands (init, add, commit, status)
+Viewing commit history (log)
+Undoing changes (git revert, git reset, git checkout)
+Level 2: Branching and Merging
+
+Creating and switching branches (branch, checkout, switch)
+Merging branches (merge)
+Resolving merge conflicts
+Level 3: Remote Repositories and GitHub Basics
+
+Creating a GitHub account
+Creating repositories on GitHub
+Cloning repositories (clone)
+Pushing and pulling changes (push, pull)
+Managing remotes (remote, fetch)
+Level 4: Collaboration Fundamentals
+
+Forking repositories
+Creating and managing pull requests
+Code reviews and approving changes
+Level 5: Advanced Git Commands
+
+Rebasing (git rebase)
+Cherry-picking commits (git cherry-pick)
+Stashing changes (git stash)
+Level 6: GitHub Project Management
+
+Using GitHub Issues for task management
+Creating and managing project boards
+Tracking progress with milestones
+Level 7: Git Workflows
+
+Gitflow workflow
+GitHub flow
+Trunk-based development
+Level 8: CI/CD with GitHub Actions
+
+Introduction to GitHub Actions
+Creating workflows for automation
+Automating tests and deployments
+
+
+######################
+Day#2
+Here’s a detailed set of notes with commands and a quiz for each section of **Level 1: Git Basics**:
+
+---
+
+## **1. Understanding Version Control**
+Version control helps developers manage changes to source code over time. It tracks every modification made to a project, enabling collaboration, recovery from mistakes, and maintaining a history of changes.
+
+### Types of Version Control:
+- **Local Version Control**: Tracks changes on a local system.
+- **Centralized Version Control (CVCS)**: One central repository where all changes are made.
+- **Distributed Version Control (DVCS)**: Each contributor has a copy of the entire repository (e.g., Git, Mercurial).
+
+### Benefits:
+- Collaboration
+- Backup and recovery
+- Historical record of changes
+- Branching and merging support
+
+---
+
+## **2. Installing Git**
+You can install Git on any major operating system. Here’s how:
+
+### For Windows:
+1. Download the installer from [git-scm.com](https://git-scm.com/).
+2. Follow the instructions in the installer.
+3. Verify the installation by opening a command prompt and typing:
+   ```bash
+   git --version
+   ```
+
+### For macOS:
+1. Open Terminal and run:
+   ```bash
+   brew install git
+   ```
+   Or download from the [official site](https://git-scm.com/).
+   
+2. Verify with:
+   ```bash
+   git --version
+   ```
+
+### For Linux:
+1. Install via package manager (example for Ubuntu):
+   ```bash
+   sudo apt-get install git
+   ```
+   
+2. Verify with:
+   ```bash
+   git --version
+   ```
+
+---
+
+## **3. Basic Git Commands**
+Once Git is installed, here are the basic commands to manage repositories.
+
+### **3.1. `git init`**
+Initializes a new Git repository in your project folder.
+```bash
+git init
+```
+This creates a hidden `.git` directory that tracks all changes.
+
+### **3.2. `git add`**
+Stages changes for the next commit. You can add specific files or all files.
+```bash
+git add <file_name>
+git add .
+```
+
+### **3.3. `git commit`**
+Commits staged changes to the repository with a message explaining what was done.
+```bash
+git commit -m "Your commit message"
+```
+
+### **3.4. `git status`**
+Shows the current state of the working directory and staging area (tracked files, staged changes, etc.).
+```bash
+git status
+```
+
+---
+
+## **4. Viewing Commit History**
+Git keeps track of every change with commits. You can view the commit history to see what changes were made and when.
+
+### **4.1. `git log`**
+Displays the history of commits, showing the commit hash, author, date, and message.
+```bash
+git log
+```
+To display just one line per commit:
+```bash
+git log --oneline
+```
+
+To display a graph showing branches:
+```bash
+git log --graph --oneline
+```
+
+---
+
+## **5. Undoing Changes**
+Git provides several commands to undo changes in different ways:
+
+### **5.1. `git revert`**
+Creates a new commit that undoes the changes of a previous commit, preserving history.
+```bash
+git revert <commit_hash>
+```
+You can find the commit hash from `git log`.
+
+### **5.2. `git reset`**
+Moves the branch pointer to a different commit, optionally changing the working directory and index.
+```bash
+git reset --hard <commit_hash>   # Removes all changes permanently.
+git reset --soft <commit_hash>   # Keeps your changes but resets the commit history.
+```
+
+### **5.3. `git checkout`**
+Switches branches or restores working directory files.
+```bash
+git checkout <branch_name>    # Switch to a branch.
+git checkout <commit_hash>    # Go back to a specific commit.
+git checkout -- <file_name>   # Discards changes in the working directory for a file.
+```
+
+---
+
+## **Quizzes**
+
+### **Quiz for Section 1: Understanding Version Control**
+1. What is version control, and why is it important?
+2. Name two types of version control systems.
+3. What is the difference between centralized and distributed version control?
+
+---
+
+### **Quiz for Section 2: Installing Git**
+1. Which command is used to verify if Git is installed?
+2. How do you install Git on Ubuntu?
+3. What does `git --version` do?
+
+---
+
+### **Quiz for Section 3: Basic Git Commands**
+1. Which command initializes a new Git repository?
+   - A) `git add`
+   - B) `git commit`
+   - C) `git init`
+   - D) `git status`
+   
+2. How do you stage all files for a commit?
+   - A) `git add .`
+   - B) `git commit`
+   - C) `git init`
+   - D) `git log`
+   
+3. Which command allows you to commit changes with a message?
+
+---
+
+### **Quiz for Section 4: Viewing Commit History**
+1. How do you view the commit history?
+2. How do you display a graphical representation of branches and commits?
+3. Which option in `git log` shows a compact view of the commit history?
+
+---
+
+### **Quiz for Section 5: Undoing Changes**
+1. What does `git revert` do?
+2. How do `git reset --hard` and `git reset --soft` differ?
+3. How do you discard changes in your working directory without committing?
+
+---
+
